@@ -25,6 +25,10 @@ https://hackmd.io/@sysprog/BJvOWzFqv
 https://thomas.spurden.name/gameboy
 https://hackmd.io/@RinHizakura/BJ6HoW29v
 https://media.ccc.de/v/33c3-8029-the_ultimate_game_boy_talk
+
+## GBIT
+https://github.com/koenk/gbit
+
 ## C wrapper to Call C++ with C++ objects
 http://www.huoschen.idv.tw/blog/programming/c-calling-c++-functions/
 ## How to build linux shared libraries & write Makefiles
