@@ -10,5 +10,6 @@ all: $(sub_folders)
 $(executables): lib
 	$(MAKE) -C ./$@ build_dir=$(build_dir)
 
+# TODO: re-write makefile to leverage dependycy & parallel build
 lib:
 	$(MAKE) -C ./lib build_dir=$(build_dir)
