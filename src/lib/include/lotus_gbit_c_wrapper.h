@@ -16,7 +16,10 @@ extern "C" {
 #endif // __cplusplus
 
 pILotusGBIT lotusGBIT_Create();
+void lotusGBIT_Init(pILotusGBIT self, size_t instruction_mem_size, uint8_t *instruction_mem);
 void lotusGBIT_GetStatus(pILotusGBIT self, LotusGBState *state);
+void lotusGBIT_SetStatus(pILotusGBIT self, LotusGBState *state);
+int lotusGBIT_Step(pILotusGBIT self);
 
 #ifdef __cplusplus
 }

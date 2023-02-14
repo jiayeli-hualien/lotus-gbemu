@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
+
+#define GBIT_MEM_ACCESS_WRITE 1
 
 // re-write struct to decouple GBIT, provide C call C++ interface
 // TODO: find a better way.
@@ -14,6 +17,7 @@ struct LotusGBMemAccess {
     uint8_t value;
 };
 
+#define LOTUSGB_GBIT_MEM_ACCESS_NUM 16
 typedef struct LotusGBState LotusGBState;
 struct LotusGBState {
     uint8_t f, a, c, b, e, d, l, h;
@@ -22,7 +26,7 @@ struct LotusGBState {
     bool is_interrupts_master_enabled;
 
     int num_accesses;
-    struct LotusGBMemAccess mem_accesses[16];
+    struct LotusGBMemAccess mem_accesses[LOTUSGB_GBIT_MEM_ACCESS_NUM];
 };
 
 #endif // LOTUSGB_GB_STATE_FOR_GBIT_H

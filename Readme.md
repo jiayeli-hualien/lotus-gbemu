@@ -13,6 +13,10 @@ LotusGB: named from howntown "花蓮", reverse it "蓮花" -> Lotus.
 3. Wrote an C/C++ wrapper. (Wana to implement my emulator in C++, but GBIT is C).
    1. I make a mistake. We can simply write a C++ program to call GBIT with providing extern "C" callbacks. We don't need to provide a fully C wrapper of C++. Let it go.
 
+2023/2/15
+1. Integrating GBIT, NOP is not passed.
+2. I try to apply C++/OOP/DesignPattern, but my code is mixed up.
+3. (TODO) get_state/set_state for GBIT
 
 
 # Lisence (TODO)
@@ -35,3 +39,6 @@ http://www.huoschen.idv.tw/blog/programming/c-calling-c++-functions/
 https://stackoverflow.com/questions/8096015/creating-a-simple-makefile-to-build-a-shared-library
 https://jasonblog.github.io/note/gunmake/makefile_zhong_de_,_%5E,__,__fu_hao.html
 https://gist.github.com/wenchy/64db1636845a3da0c4c7
+
+## Game Boy: Complete Technical Reference
+https://github.com/Gekkio/gb-ctr

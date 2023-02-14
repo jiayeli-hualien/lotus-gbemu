@@ -8,8 +8,10 @@ build_dir := $(CURDIR)/build
 
 all: build
 
-build:
-	mkdir -p $(build_dir)
+$(build_dir):
+	mkdir -p $@
+
+build: $(build_dir)
 	$(MAKE) -C $(src_dir) build_dir=$(build_dir)
 
 clean:
