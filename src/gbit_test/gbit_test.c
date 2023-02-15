@@ -22,10 +22,10 @@ struct tester_operations gbLotusOps = {
 static pILotusGBIT gpLotusGB = NULL;
 int main(int argc, char *argv[]) {
     static struct tester_flags flags = {
-    .keep_going_on_mismatch = 0,
+    .keep_going_on_mismatch = 1,
     .enable_cb_instruction_testing = 1,
-    .print_tested_instruction = 1,
-    .print_verbose_inputs = 1,
+    .print_tested_instruction = 0,
+    .print_verbose_inputs = 0,
     };
     gpLotusGB = lotusGBIT_Create();
     return tester_run(&flags, &gbLotusOps);
@@ -41,7 +41,16 @@ void lotus_set_state(struct state *state) {
 
     lotusGBState.a = state->reg8.A;
     lotusGBState.f = state->reg8.F;
+    lotusGBState.b = state->reg8.B;
+    lotusGBState.c = state->reg8.C;
+    lotusGBState.d = state->reg8.D;
+    lotusGBState.e = state->reg8.E;
+    lotusGBState.h = state->reg8.H;
+    lotusGBState.l = state->reg8.L;
+    lotusGBState.sp = state->SP;
     lotusGBState.pc = state->PC;
+    lotusGBState.is_halt = state->halted;
+    lotusGBState.interrupts_master_enable = state->interrupts_master_enabled;
     lotusGBState.num_accesses = state->num_mem_accesses;
     memcpy(lotusGBState.mem_accesses, state->mem_accesses, sizeof(state->mem_accesses));
 
@@ -55,7 +64,16 @@ void lotus_get_state(struct state *state) {
     memset(state, 0, sizeof(struct state));
     state->reg8.A = lotusGBState.a;
     state->reg8.F = lotusGBState.f;
+    state->reg8.B = lotusGBState.b;
+    state->reg8.C = lotusGBState.c;
+    state->reg8.D = lotusGBState.d;
+    state->reg8.E = lotusGBState.e;
+    state->reg8.H = lotusGBState.h;
+    state->reg8.L = lotusGBState.l;
+    state->SP = lotusGBState.sp;
     state->PC = lotusGBState.pc;
+    state->halted = lotusGBState.is_halt;
+    state->interrupts_master_enabled = lotusGBState.interrupts_master_enable;
     state->num_mem_accesses = lotusGBState.num_accesses;
     memcpy(state->mem_accesses, lotusGBState.mem_accesses, sizeof(state->mem_accesses));
 }

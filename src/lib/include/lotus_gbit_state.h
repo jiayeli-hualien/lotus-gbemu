@@ -22,8 +22,8 @@ typedef struct LotusGBState LotusGBState;
 struct LotusGBState {
     uint8_t f, a, c, b, e, d, l, h;
     uint16_t sp, pc;
-    bool is_halted;
-    bool is_interrupts_master_enabled;
+    bool is_halt;
+    bool interrupts_master_enable;
 
     int num_accesses;
     struct LotusGBMemAccess mem_accesses[LOTUSGB_GBIT_MEM_ACCESS_NUM];

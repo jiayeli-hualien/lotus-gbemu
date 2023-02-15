@@ -29,4 +29,20 @@ void GBCPU::setReg(const Reg &reg) {
     this->reg = reg;
 }
 
+bool GBCPU::getIME() {
+    return this->interruptMasterEnable;
+}
+
+void GBCPU::setIME(bool ime) {
+    this->interruptMasterEnable = ime;
+}
+
+bool GBCPU::getHALT() {
+    return this->isHalt;
+}
+
+void GBCPU::setHALT(bool halt) {
+    this->isHalt = halt;
+}
+
 }

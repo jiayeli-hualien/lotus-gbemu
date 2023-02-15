@@ -15,10 +15,16 @@ public:
     void stepOneClock();
     Reg getReg();
     void setReg(const Reg &reg);
+    bool getIME();
+    void setIME(bool ime);
+    bool getHALT();
+    void setHALT(bool halt);
 private:
     IMemoryAccess *pMmu;
     Reg reg;
     u_int64_t clockTimeStamp;
+    bool interruptMasterEnable;
+    bool isHalt;
 };
 
 }

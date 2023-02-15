@@ -14,8 +14,13 @@ public:
     virtual void stepOneClock() = 0;
 
     // tool functions for GBIT
+    // TODO: remove them from API, or provide Memento Pattern
     virtual Reg getReg() = 0;
     virtual void setReg(const Reg &reg) = 0;
+    virtual bool getIME() = 0;
+    virtual void setIME(bool ime) = 0;
+    virtual bool getHALT() = 0;
+    virtual void setHALT(bool halt) = 0;
 };
 
 }

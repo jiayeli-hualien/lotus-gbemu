@@ -7,6 +7,7 @@ A simple C++ class to provide registers set and get
 
 namespace LOTUSGB {
 
+// little endian host
 enum REG_ID {
     REG_ID_A = 0,
     REG_ID_F,
@@ -17,6 +18,10 @@ enum REG_ID {
     REG_ID_H,
     REG_ID_L,
 };
+// TODO: big endian host
+
+
+#define CAST_REF_TO_16BIT(x) (*((uint16_t*)(&x)))
 
 class Reg {
     static const int REG_8BIT_NUM = 8;
@@ -27,9 +32,20 @@ class Reg {
 public:
     // TODO: more regs
     // TODO: move function to a .cpp file
-    uint8_t& getRefA() { return reg8bit[REG_ID_A]; };
-    uint8_t& getRefF() { return reg8bit[REG_ID_F]; };
-    uint16_t& getRefPC() { return pc; };
+    inline uint8_t& getRefA() { return reg8bit[REG_ID_A]; };
+    inline uint8_t& getRefF() { return reg8bit[REG_ID_F]; };
+    inline uint8_t& getRefB() { return reg8bit[REG_ID_B]; };
+    inline uint8_t& getRefC() { return reg8bit[REG_ID_C]; };
+    inline uint8_t& getRefD() { return reg8bit[REG_ID_D]; };
+    inline uint8_t& getRefE() { return reg8bit[REG_ID_E]; };
+    inline uint8_t& getRefH() { return reg8bit[REG_ID_H]; };
+    inline uint8_t& getRefL() { return reg8bit[REG_ID_L]; };
+
+    inline uint16_t& getRefBC() { return CAST_REF_TO_16BIT(reg8bit[REG_ID_B]);}
+    inline uint16_t& getRefDE() { return CAST_REF_TO_16BIT(reg8bit[REG_ID_D]);}
+    inline uint16_t& getRefHL() { return CAST_REF_TO_16BIT(reg8bit[REG_ID_H]);}
+    inline uint16_t& getRefPC() { return pc; };
+    inline uint16_t& getRefSP() { return sp; };
 };
 
 }
