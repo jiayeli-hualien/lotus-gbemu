@@ -4,8 +4,8 @@
 
 namespace LOTUSGB {
 
-LotusGB::LotusGB(ICPU *pCPU, IMemoryGBIT *pMMU, IMemoryAccess *pInstructionMemory)
-:pCPU(pCPU), pMMU(pMMU), pInstructionMemory(pInstructionMemory) {
+LotusGB::LotusGB(ICPU *pCPU, IMemoryGBIT *pMMU)
+:pCPU(pCPU), pMMU(pMMU) {
 }
 
 void LotusGB::getState(LotusGBState *pState) {

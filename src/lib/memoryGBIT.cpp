@@ -5,15 +5,14 @@
 
 namespace LOTUSGB {
 
-MemoryGBIT::MemoryGBIT(IMemoryAccess *pInstructionRam)
-    :pInstructionRam(pInstructionRam) {
+MemoryGBIT::MemoryGBIT() {
 }
 
 uint8_t MemoryGBIT::read(uint16_t addr) {
     if (addr >= instructionMemSize)
         return 0xAA;
     else
-        return pInstructionRam->read(addr);
+        return *(pInstructionMem + (int)addr);
 }
 
 void MemoryGBIT::write(uint16_t addr, uint8_t value) {
@@ -24,7 +23,6 @@ void MemoryGBIT::write(uint16_t addr, uint8_t value) {
 }
 
 void MemoryGBIT::resize(size_t size) {
-    pInstructionRam->resize(size);
 }
 
 int MemoryGBIT::getMemoryState(LotusGBMemAccess accessRec[LOTUSGB_GBIT_MEM_ACCESS_NUM]) {
@@ -42,9 +40,7 @@ void MemoryGBIT::setMemoryState(int num_mem_accesses,
 void MemoryGBIT::setInsturctionMem(size_t instructionMemSize,
         uint8_t *instruction_mem) {
     this->instructionMemSize = instructionMemSize;
-    resize(instructionMemSize);
-    for (size_t i=0; i!=instructionMemSize; i++)
-        pInstructionRam->write(i, instruction_mem[i]);
+    this->pInstructionMem = instruction_mem;
 }
 
 }

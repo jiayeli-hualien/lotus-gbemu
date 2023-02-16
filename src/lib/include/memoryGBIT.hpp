@@ -14,7 +14,7 @@ Want to test class memory (if I can), inherits GB memory and extends
 TODO: Inheritance MMU instead of Memory if MMU is implement (GBIT tests a MMU)
 */
 public:
-    MemoryGBIT(IMemoryAccess *pInstructionRam);
+    MemoryGBIT();
     uint8_t read(uint16_t addr);
     void write(uint16_t addr, uint8_t value);
     int getMemoryState(
@@ -26,7 +26,7 @@ public:
     void resize(size_t size);
 private:
     size_t instructionMemSize = 0;
-    IMemoryAccess *pInstructionRam = nullptr;
+    uint8_t *pInstructionMem = nullptr;
     int numMemAccess = 0;
     LotusGBMemAccess memAccessRecord[LOTUSGB_GBIT_MEM_ACCESS_NUM];
 };

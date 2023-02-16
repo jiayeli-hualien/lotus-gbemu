@@ -1,6 +1,9 @@
 #include "include/GBCPU.hpp"
 #include "include/gb_reg.hpp"
 
+// TODO: instruction factory, instruction from csv
+#include "include/instSubFunc.hpp"
+
 namespace LOTUSGB {
 
 GBCPU::GBCPU(IMemoryAccess *pMmu):pMmu(pMmu) {
@@ -15,8 +18,16 @@ void GBCPU::reset() {
 
 void GBCPU::stepOneCycle() {
     // TODO: opcode framework
-    // Only handle NOP now
-    reg.getRefPC()++;
+    InstState instStat;
+    // TODO: fetch
+    instStat.inst[instStat.fetchedLen++] = pMmu->read(reg.getRefPC()++);
+    if (instStat.inst[0] == 0x00) {
+        subFuncNOP nop;
+        nop(&instStat, &reg, pMmu);
+    } else if ((instStat.inst[0]&0xc0) == 0x40) {
+        subFuncLDRR ldrr;
+        ldrr(&instStat, &reg, pMmu);
+    }
     clockTimeStamp+=4;
 }
 

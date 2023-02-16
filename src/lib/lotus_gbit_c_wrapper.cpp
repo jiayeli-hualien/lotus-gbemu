@@ -13,10 +13,9 @@ using LOTUSGB::MemoryGBIT;
 pILotusGBIT lotusGBIT_Create() {
     // TODO: factory
     // TODO: delete objects
-    Memory *pInstructMem = new Memory();
-    MemoryGBIT *pMockMMU = new MemoryGBIT(pInstructMem);
+    MemoryGBIT *pMockMMU = new MemoryGBIT();
     GBCPU *pCPU = new GBCPU(pMockMMU);
-    return new LotusGB(pCPU, pMockMMU, pInstructMem);
+    return new LotusGB(pCPU, pMockMMU);
 }
 
 void lotusGBIT_Init(pILotusGBIT self, size_t instruction_mem_size, uint8_t *instruction_mem) {

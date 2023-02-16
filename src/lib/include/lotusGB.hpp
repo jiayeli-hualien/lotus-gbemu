@@ -13,7 +13,7 @@ namespace LOTUSGB {
 
 class LotusGB : public ILotusGBIT {
 public:
-    LotusGB(ICPU *pCPU, IMemoryGBIT *pMMU, IMemoryAccess *pInstructionMemory);
+    LotusGB(ICPU *pCPU, IMemoryGBIT *pMMU);
     void init(size_t instruction_mem_size, uint8_t *instruction_mem);
     void getState(LotusGBState *pState);
     void setState(LotusGBState *pState);
@@ -22,7 +22,6 @@ private:
     // TODO: only access via interface
     ICPU *pCPU;
     IMemoryGBIT *pMMU; 
-    IMemoryAccess *pInstructionMemory;
 };
 
 }
