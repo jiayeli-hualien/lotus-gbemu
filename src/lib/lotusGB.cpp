@@ -53,12 +53,12 @@ void LotusGB::setState(LotusGBState *pState) {
 int LotusGB::step() {
     // TODO: fast way to get PC
     Reg reg;
-    int clockCnt = 0;
+    int memCycleCnt = 0;
     while(reg = pCPU->getReg(), reg.getRefPC()==0) {
-        pCPU->stepOneClock();
-        clockCnt++;
+        pCPU->stepOneCycle();
+        memCycleCnt++;
     }
-    return clockCnt;
+    return memCycleCnt*4;
 }
 
 }

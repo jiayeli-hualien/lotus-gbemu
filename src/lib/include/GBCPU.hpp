@@ -12,7 +12,7 @@ class GBCPU : public ICPU {
 public:
     GBCPU(IMemoryAccess *pMmu);
     void reset();
-    void stepOneClock();
+    void stepOneCycle();
     Reg getReg();
     void setReg(const Reg &reg);
     bool getIME();

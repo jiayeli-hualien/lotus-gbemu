@@ -13,12 +13,11 @@ void GBCPU::reset() {
     clockTimeStamp = 0;
 }
 
-void GBCPU::stepOneClock() {
+void GBCPU::stepOneCycle() {
     // TODO: opcode framework
     // Only handle NOP now
-    if (clockTimeStamp % 4 == 3)
-        reg.getRefPC()++;
-    clockTimeStamp++;
+    reg.getRefPC()++;
+    clockTimeStamp+=4;
 }
 
 Reg GBCPU::getReg() {

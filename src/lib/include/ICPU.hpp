@@ -10,8 +10,10 @@ namespace LOTUSGB {
 class ICPU {
 public:
     virtual void reset() = 0;
-    // step one CPU clock
-    virtual void stepOneClock() = 0;
+
+    // step one memory cycle until got cpu pipeline documents
+    // TODO: func stepOneCPUClock
+    virtual void stepOneCycle() = 0; // 1Hz mem cycle
 
     // tool functions for GBIT
     // TODO: remove them from API, or provide Memento Pattern
