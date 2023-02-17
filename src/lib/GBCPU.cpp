@@ -23,10 +23,10 @@ void GBCPU::stepOneCycle() {
     instStat.inst[instStat.fetchedLen++] = pMmu->read(reg.getRefPC()++);
     if (instStat.inst[0] == 0x00) {
         subFuncNOP nop;
-        nop(&instStat, &reg, pMmu);
+        nop(&instStat, &reg);
     } else if ((instStat.inst[0]&0xc0) == 0x40) {
         subFuncLDRR ldrr;
-        ldrr(&instStat, &reg, pMmu);
+        ldrr(&instStat, &reg);
     }
     clockTimeStamp+=4;
 }

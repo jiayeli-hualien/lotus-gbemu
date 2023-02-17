@@ -7,31 +7,31 @@
 
 namespace LOTUSGB {
 
-static uint8_t* _ldrrGetReg(int number, Reg *reg) {
+static inline uint8_t* _getReg(const int &number, Reg *pReg) {
     switch (number) {
-        case 0: return &reg->getRefB();
-        case 1: return &reg->getRefC();
-        case 2: return &reg->getRefD();
-        case 3: return &reg->getRefE();
-        case 4: return &reg->getRefH();
-        case 5: return &reg->getRefL();
+        case 0: return &pReg->getRefB();
+        case 1: return &pReg->getRefC();
+        case 2: return &pReg->getRefD();
+        case 3: return &pReg->getRefE();
+        case 4: return &pReg->getRefH();
+        case 5: return &pReg->getRefL();
         // 6: HL is handled in 16bit LD instruction
-        case 7: return &reg->getRefA();
+        case 7: return &pReg->getRefA();
         default:
             return nullptr;
     }
 }
 
-static uint8_t* ldrrGetRegLHS(uint8_t op, Reg *reg) {
+static uint8_t* getRegLHS(const uint8_t &op, Reg *pReg) {
     constexpr uint8_t MASK = 0x3F;
     const int num = ((op&MASK)>>3U);
-    return _ldrrGetReg(num, reg);
+    return _getReg(num, pReg);
 }
 
-static uint8_t* ldrrGetRegRHS(uint8_t op, Reg *reg) {
+static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
     constexpr uint8_t MASK = 0x07;
     const int num = (op & MASK);
-    return _ldrrGetReg(num, reg);
+    return _getReg(num, pReg);
 }
 
 
@@ -41,14 +41,29 @@ SUB_FUNC_IMPL(subFuncNOP){
 
 SUB_FUNC_IMPL(subFuncLDRR) {
     // TODO: error handling
-    const uint8_t op = instState->inst[0];
-    uint8_t *lhs = ldrrGetRegLHS(op, reg);
-    uint8_t *rhs = ldrrGetRegRHS(op, reg);
+    const uint8_t &op = pInstState->inst[0];
+    uint8_t *lhs = getRegLHS(op, pReg);
+    uint8_t *rhs = getRegRHS(op, pReg);
     if (!lhs || !rhs) {
-        std::cout << "invalid OP code, reg not support" << (int)op << std::endl;
+        std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
         return;
     }
     *lhs = *rhs;
+}
+
+SUB_FUNC_IMPL(subFuncMemRead) {
+    // notify CPU to read immediate value
+    pInstState->memMode = MEM_MODE_READ;
+}
+
+SUB_FUNC_IMPL(subFuncLDR_IMMD) {
+    const uint8_t op = pInstState->inst[0];
+    uint8_t *lhs = getRegLHS(op, pReg);
+    if (!lhs) {
+        std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
+        return;
+    }
+    *lhs = pInstState->memValue;
 }
 
 }

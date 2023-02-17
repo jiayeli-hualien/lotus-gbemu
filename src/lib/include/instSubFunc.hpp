@@ -19,15 +19,17 @@ http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 
 namespace LOTUSGB {
 
-#define SUB_FUNC_TYPE_DECLARE(x) \
+#define SUB_FUNC_DECLARE(x) \
 struct x {\
 SUB_FUNC_OP_RET SUB_FUNC_OP;\
 };
 
 #define SUB_FUNC_IMPL(x) SUB_FUNC_OP_RET x::SUB_FUNC_OP
 
-SUB_FUNC_TYPE_DECLARE(subFuncNOP);
-SUB_FUNC_TYPE_DECLARE(subFuncLDRR);
+SUB_FUNC_DECLARE(subFuncNOP);
+SUB_FUNC_DECLARE(subFuncLDRR);
+SUB_FUNC_DECLARE(subFuncMemRead);
+SUB_FUNC_DECLARE(subFuncLDR_IMMD);
 
 }
 
