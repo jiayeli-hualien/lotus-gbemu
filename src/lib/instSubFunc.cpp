@@ -48,7 +48,9 @@ subFunMapType getSubFuncMap() {
     map["subFuncLDRR"] = subFuncLDRR();
     map["subFuncMemReadPC"] = subFuncMemReadPC();
     map["subFuncMemReadHL"] = subFuncMemReadHL();
+    map["subFuncMemReadBC_DE"] = subFuncMemReadBC_DE();
     map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
+    map["subFuncLDA_MEMVAL"] = subFuncLDA_MEMVAL();
     map["subFuncMemWriteHL"] = subFuncMemWriteHL();
     return map;
 }
@@ -79,6 +81,21 @@ SUB_FUNC_IMPL(subFuncMemReadHL) {
     pInstState->memAddr = pReg->getRefHL();
 }
 
+SUB_FUNC_IMPL(subFuncMemReadBC_DE) {
+    pInstState->memMode = MEM_MODE_READ;
+    constexpr uint8_t MASK_DE = 0x10;
+    switch(pInstState->opcode & MASK_DE) {
+        case 0:
+            pInstState->memAddr = pReg->getRefBC();
+            break;
+        case MASK_DE:
+            pInstState->memAddr = pReg->getRefDE();
+            break;
+        default:
+            break;
+    }
+}
+
 SUB_FUNC_IMPL(subFuncMemWriteHL) {
     pInstState->memMode = MEM_MODE_WRITE;
     pInstState->memAddr = pReg->getRefHL();
@@ -91,6 +108,10 @@ SUB_FUNC_IMPL(subFuncLDR_MEMVAL) {
     uint8_t *lhs = getRegLHS(pInstState->opcode, pReg);
     if (lhs)
         *lhs = pInstState->memValue;
+}
+
+SUB_FUNC_IMPL(subFuncLDA_MEMVAL) {
+    pReg->getRefA() = pInstState->memValue;
 }
 
 }
