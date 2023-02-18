@@ -34,10 +34,16 @@ static uint8_t* getRegLHS(const uint8_t &op, Reg *pReg) {
 }
 
 static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
-    constexpr uint8_t MASK = 0x07;
-    const int num = (op & MASK);
-    auto ret = _getReg(num, pReg);
-    return ret;
+    switch(op) {
+        case 0x02:
+        case 0x12:
+            return &(pReg->getRefA());
+        default:
+            constexpr uint8_t MASK = 0x07;
+            const int num = (op & MASK);
+            auto ret = _getReg(num, pReg);
+            return ret;
+    }
 }
 
 
@@ -48,9 +54,10 @@ subFunMapType getSubFuncMap() {
     map["subFuncLDRR"] = subFuncLDRR();
     map["subFuncMemReadPC"] = subFuncMemReadPC();
     map["subFuncMemReadIndirect"] = subFuncMemReadIndirect();
+    map["subFuncMemWriteIndirect"] = subFuncMemWriteIndirect();
     map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
     map["subFuncLDA_MEMVAL"] = subFuncLDA_MEMVAL();
-    map["subFuncMemWriteHL"] = subFuncMemWriteHL();
+
     return map;
 }
 
@@ -75,25 +82,22 @@ SUB_FUNC_IMPL(subFuncMemReadPC) {
     INCPC(); // inc by immdeiate value is read
 }
 
-SUB_FUNC_IMPL(subFuncMemReadIndirect) {
-    pInstState->memMode = MEM_MODE_READ;
-    // TODO: remove hard code?
-    switch(pInstState->opcode) {
-        case 0x0A:
-            pInstState->memAddr = pReg->getRefBC();
-            break;
-        case 0x1A:
-            pInstState->memAddr = pReg->getRefDE();
-            break;
-        default:
-            pInstState->memAddr = pReg->getRefHL();
-            break;
+static uint16_t& _getIndreictReg16(const uint8_t &opcode, Reg *pReg) {
+    switch(opcode & 0xF0) {
+        case 0x00: return pReg->getRefBC();
+        case 0x10: return pReg->getRefDE();
+        default: return pReg->getRefHL();
     }
 }
 
-SUB_FUNC_IMPL(subFuncMemWriteHL) {
+SUB_FUNC_IMPL(subFuncMemReadIndirect) {
+    pInstState->memMode = MEM_MODE_READ;
+    pInstState->memAddr = _getIndreictReg16(pInstState->opcode, pReg);
+}
+
+SUB_FUNC_IMPL(subFuncMemWriteIndirect) {
     pInstState->memMode = MEM_MODE_WRITE;
-    pInstState->memAddr = pReg->getRefHL();
+    pInstState->memAddr = _getIndreictReg16(pInstState->opcode, pReg);
     uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
     if (rhs)
         pInstState->memValue = *rhs;
