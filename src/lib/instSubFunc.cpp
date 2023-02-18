@@ -25,12 +25,20 @@ static inline uint8_t* _getReg(const int &number, Reg *pReg) {
 }
 
 static uint8_t* getRegLHS(const uint8_t &op, Reg *pReg) {
-    constexpr uint8_t MASK = 0x3F;
-    const int num = ((op&MASK)>>3U);
-    auto ret = _getReg(num, pReg);
-    if (!ret)
-        std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
-    return ret;
+    switch (op)
+    {
+        case 0x0A:
+        case 0x1A:
+            return &(pReg->getRefA());
+        default:
+            constexpr uint8_t MASK = 0x3F;
+            const int num = ((op&MASK)>>3U);
+            auto ret = _getReg(num, pReg);
+            if (!ret)
+                std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
+            return ret;
+    }
+
 }
 
 static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
@@ -56,7 +64,6 @@ subFunMapType getSubFuncMap() {
     map["subFuncMemReadIndirect"] = subFuncMemReadIndirect();
     map["subFuncMemWriteIndirect"] = subFuncMemWriteIndirect();
     map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
-    map["subFuncLDA_MEMVAL"] = subFuncLDA_MEMVAL();
 
     return map;
 }
@@ -107,10 +114,6 @@ SUB_FUNC_IMPL(subFuncLDR_MEMVAL) {
     uint8_t *lhs = getRegLHS(pInstState->opcode, pReg);
     if (lhs)
         *lhs = pInstState->memValue;
-}
-
-SUB_FUNC_IMPL(subFuncLDA_MEMVAL) {
-    pReg->getRefA() = pInstState->memValue;
 }
 
 }

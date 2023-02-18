@@ -36,7 +36,6 @@ SUB_FUNC_DECLARE(subFuncMemReadPC);
 SUB_FUNC_DECLARE(subFuncMemReadIndirect);
 SUB_FUNC_DECLARE(subFuncMemWriteIndirect);
 SUB_FUNC_DECLARE(subFuncLDR_MEMVAL);
-SUB_FUNC_DECLARE(subFuncLDA_MEMVAL);
 
 }
 

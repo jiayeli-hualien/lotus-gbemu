@@ -5,5 +5,5 @@ LD_R_N, 2, subFuncMemReadPC, subFuncLDR_MEMVAL
 LD_R_HL, 2, subFuncMemReadIndirect, subFuncLDR_MEMVAL
 LD_HL_R, 2, subFuncMemWriteIndirect, subFuncNOP
 LD_HL_N, 3, subFuncMemReadPC, subFuncMemWriteIndirect, subFuncNOP
-LD_A_BC_DE, 2, subFuncMemReadIndirect, subFuncLDA_MEMVAL
+LD_A_BC_DE, 2, subFuncMemReadIndirect, subFuncLDR_MEMVAL
 LD_BC_DE_A, 2, subFuncMemWriteIndirect, subFuncNOP
