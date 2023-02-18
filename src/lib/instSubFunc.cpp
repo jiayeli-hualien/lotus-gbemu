@@ -60,7 +60,7 @@ SUB_FUNC_IMPL(subFuncNOP){
 
 SUB_FUNC_IMPL(subFuncLDRR) {
     // TODO: error handling
-    const uint8_t &op = pInstState->inst[0];
+    const uint8_t &op = pInstState->opcode;
     uint8_t *lhs = getRegLHS(op, pReg);
     uint8_t *rhs = getRegRHS(op, pReg);
     if (lhs && rhs)
@@ -82,15 +82,13 @@ SUB_FUNC_IMPL(subFuncMemReadHL) {
 SUB_FUNC_IMPL(subFuncMemWriteHL) {
     pInstState->memMode = MEM_MODE_WRITE;
     pInstState->memAddr = pReg->getRefHL();
-    const uint8_t op = pInstState->inst[0];
-    uint8_t *rhs = getRegRHS(op, pReg);
+    uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
     if (rhs)
         pInstState->memValue = *rhs;
 }
 
 SUB_FUNC_IMPL(subFuncLDR_MEMVAL) {
-    const uint8_t op = pInstState->inst[0];
-    uint8_t *lhs = getRegLHS(op, pReg);
+    uint8_t *lhs = getRegLHS(pInstState->opcode, pReg);
     if (lhs)
         *lhs = pInstState->memValue;
 }

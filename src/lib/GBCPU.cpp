@@ -11,10 +11,7 @@ GBCPU::GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder):pMmu(pMmu), pDecoder(pDecod
 
 void GBCPU::fetch(uint16_t addr) {
     InstState &instStat = instStatBuf[curInst];
-    instStat.inst[instStat.fetchedLen++] = pMmu->read(addr);
-    if (instStat.fetchedLen == 1) {
-        pInstBuf[curInst] = pDecoder->decode(instStat.inst[0]);
-    }
+    pInstBuf[curInst] = pDecoder->decode(instStat.opcode = pMmu->read(addr));
 }
 
 void GBCPU::fetchFirstOpcode() {

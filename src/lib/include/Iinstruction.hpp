@@ -15,8 +15,7 @@ enum MEM_MODE {
 
 static constexpr size_t MAX_INST_LEN = 4; // in bytes, acutaly 3 but align 4
 struct InstState {
-    uint8_t inst[MAX_INST_LEN] = {}; // fetching instruction
-    size_t fetchedLen = 0;
+    uint8_t opcode = 0;
 
     int memCycleCnt = 0; // current memCycleCnt of this instruction
     MEM_MODE memMode = MEM_MODE_NONE;
