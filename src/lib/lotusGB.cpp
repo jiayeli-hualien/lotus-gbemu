@@ -34,6 +34,7 @@ void LotusGB::init(size_t instruction_mem_size, uint8_t *instruction_mem) {
 void LotusGB::setState(LotusGBState *pState) {
     // TODO: copy all status
     Reg reg;
+    pCPU->reset(); //load first instruction after change state
     reg.getRefPC() = pState->pc;
     reg.getRefSP() = pState->sp;
     reg.getRefA() = pState->a;
@@ -51,14 +52,7 @@ void LotusGB::setState(LotusGBState *pState) {
 }
 
 int LotusGB::step() {
-    // TODO: fast way to get PC
-    Reg reg;
-    int memCycleCnt = 0;
-    while(reg = pCPU->getReg(), reg.getRefPC()==0) {
-        pCPU->stepOneCycle();
-        memCycleCnt++;
-    }
-    return memCycleCnt*4;
+   return pCPU->stepOneInstruction()*4;
 }
 
 }

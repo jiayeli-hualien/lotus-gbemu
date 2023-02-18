@@ -17,15 +17,16 @@ using SUB_FUNC_OP_RET = void;
 
 class Instruction : public IInstruction {
 public:
+    Instruction();
     using FUNC_TYPE =
         std::function<SUB_FUNC_OP_RET(SUB_FUNC_PARAMS)>;
     Instruction(std::string name, int memCycle,
                 std::vector<FUNC_TYPE> &&funcList);
     bool stepOneMemCycle(SUB_FUNC_PARAMS);
 private:
-    std::string name;
-    int memCycles;
-    std::vector<FUNC_TYPE> funcPerMemCycle;
+    std::string name = std::string();
+    int memCycles = 0;
+    std::vector<FUNC_TYPE> funcPerMemCycle = {};
 };
 
 }

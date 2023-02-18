@@ -9,8 +9,8 @@ namespace LOTUSGB {
 
 enum MEM_MODE {
     MEM_MODE_NONE = 0,
-    MEM_MODE_READ = 0,
-    MEM_MODE_WRITE = 0,
+    MEM_MODE_READ,
+    MEM_MODE_WRITE,
 };
 
 static constexpr size_t MAX_INST_LEN = 4; // in bytes, acutaly 3 but align 4
@@ -21,6 +21,7 @@ struct InstState {
     int memCycleCnt = 0; // current memCycleCnt of this instruction
     MEM_MODE memMode = MEM_MODE_NONE;
     uint8_t memValue = 0; // value read from memory or will to write to memory
+    uint16_t memAddr = 0;
 
     // TODO: system clock / interrupt handler
     bool setHalt = false;

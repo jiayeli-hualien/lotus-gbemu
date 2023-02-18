@@ -1,34 +1,78 @@
 #include "include/GBCPU.hpp"
 #include "include/gb_reg.hpp"
-
-// TODO: instruction factory, instruction from csv
+#include "include/Iinstruction.hpp"
 #include "include/instSubFunc.hpp"
+#include "include/decoder.hpp"
 
 namespace LOTUSGB {
 
-GBCPU::GBCPU(IMemoryAccess *pMmu):pMmu(pMmu) {
+GBCPU::GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder):pMmu(pMmu), pDecoder(pDecoder) {
+}
 
+void GBCPU::fetch(uint16_t addr) {
+    InstState &instStat = instStatBuf[curInst];
+    instStat.inst[instStat.fetchedLen++] = pMmu->read(addr);
+    if (instStat.fetchedLen == 1) {
+        pInstBuf[curInst] = pDecoder->decode(instStat.inst[0]);
+    }
 }
 
 void GBCPU::reset() {
-    // TODO: PC = 0, or reset intterupt
-    reg.getRefPC() = 0;
+    reg = {};
     clockTimeStamp = 0;
+    interruptMasterEnable = true;
+    isHalt = false;
+    for (auto &stat: instStatBuf)
+        stat = {};
+    curInst = 0;
+    // load first op
+    fetch(reg.getRefPC());
 }
 
-void GBCPU::stepOneCycle() {
-    // TODO: opcode framework
-    InstState instStat;
-    // TODO: fetch
-    instStat.inst[instStat.fetchedLen++] = pMmu->read(reg.getRefPC()++);
-    if (instStat.inst[0] == 0x00) {
-        subFuncNOP nop;
-        nop(&instStat, &reg);
-    } else if ((instStat.inst[0]&0xc0) == 0x40) {
-        subFuncLDRR ldrr;
-        ldrr(&instStat, &reg);
+void GBCPU::doFetchNextOp() {
+    constexpr int MASK = INST_BUFFER_SIZE-1;
+    curInst = (curInst+1)&MASK;
+    instStatBuf[curInst] = {};
+    pInstBuf[curInst] = nullptr;
+    fetch(reg.getRefPC());
+}
+
+void GBCPU::doMemRead(InstState &instStat) {
+    instStat.memValue = pMmu->read(instStat.memAddr);
+}
+void GBCPU::doMemWrite(InstState &instStat) {
+    pMmu->write(instStat.memAddr,  instStat.memValue);
+}
+
+bool GBCPU::stepOneCycle() {
+    InstState &instStat = instStatBuf[curInst];
+    IInstruction * const pInst = pInstBuf[curInst];
+    if (!pInst) {
+        std::cerr << "last decode failed" << std::endl;
+        return false;
+    }
+    instStat.memMode = MEM_MODE_NONE;
+    if (!pInst->stepOneMemCycle(&instStat, &reg)) {
+        std::cerr << "instruction failed" << std::endl;
+    }
+    switch (instStat.memMode) {
+        case MEM_MODE_NONE: doFetchNextOp(); break;
+        case MEM_MODE_READ: doMemRead(instStat); break;
+        case MEM_MODE_WRITE: doMemWrite(instStat); break;
+        default:
+            break;
     }
     clockTimeStamp+=4;
+    return true;
+}
+
+int GBCPU::stepOneInstruction() {
+    int lastInst = curInst;
+    int cntMemCycle = 0;
+    while (lastInst == curInst && stepOneCycle()) {
+        cntMemCycle++;
+    }
+    return cntMemCycle;
 }
 
 Reg GBCPU::getReg() {

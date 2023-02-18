@@ -25,8 +25,16 @@ std::vector<FUNC_TYPE> &&funcList):name(name), memCycles(memCycle), funcPerMemCy
 }
 
 bool Instruction::stepOneMemCycle(SUB_FUNC_PARAMS) {
-    funcPerMemCycle[pInstState->memCycleCnt](SUB_FUNC_ARGS);
-    return ++pInstState->memCycleCnt < memCycles;
+    if (pInstState->memCycleCnt>=memCycles) {
+
+        std::cerr << "inst name " << this->name << ":"
+                  << "invalid cnt" << pInstState->memCycleCnt
+                  << " more then sub function number "
+                  << pInstState->memCycleCnt << std::endl;
+        return false;
+    }
+    funcPerMemCycle[pInstState->memCycleCnt++](SUB_FUNC_ARGS);
+    return true;
 }
 
 }

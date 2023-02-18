@@ -7,6 +7,8 @@
 
 namespace LOTUSGB {
 
+#define INCPC() (++(pReg->getRefPC()))
+
 static inline uint8_t* _getReg(const int &number, Reg *pReg) {
     switch (number) {
         case 0: return &pReg->getRefB();
@@ -36,6 +38,7 @@ static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
 
 
 SUB_FUNC_IMPL(subFuncNOP){
+    INCPC();
     return;
 }
 
@@ -49,11 +52,14 @@ SUB_FUNC_IMPL(subFuncLDRR) {
         return;
     }
     *lhs = *rhs;
+    INCPC();
 }
 
 SUB_FUNC_IMPL(subFuncMemRead) {
     // notify CPU to read immediate value
     pInstState->memMode = MEM_MODE_READ;
+    pInstState->memAddr = pReg->getRefPC();
+    INCPC();
 }
 
 SUB_FUNC_IMPL(subFuncLDR_IMMD) {
@@ -64,6 +70,7 @@ SUB_FUNC_IMPL(subFuncLDR_IMMD) {
         return;
     }
     *lhs = pInstState->memValue;
+    INCPC();
 }
 
 }

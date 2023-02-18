@@ -31,17 +31,30 @@ struct DecodeRule {
     uint8_t matchValue = 0;
 };
 
-vector<DecodeRule> readCsvDecodeTable(std::ifstream &finDecodeTable) {
+static string trim(const string &str) {
+    static const string SPACE_CHARS(" \t\n\v\f\r");
+    return str.substr(str.find_first_not_of(SPACE_CHARS),
+                      str.find_last_not_of(SPACE_CHARS)+1);
+}
+
+static vector<DecodeRule>
+readCsvDecodeTable(std::ifstream &finDecodeTable) {
     vector<DecodeRule> rules;
     string line;
     istringstream iss;
     getline(finDecodeTable, line); // ignore first line
     while(getline(finDecodeTable, line)) {
+        line = trim(line);
+        if (line.empty())
+            continue;
         iss.str(line);
+        iss.clear();
         string col[3];
         int cnt = 0;
-        while(getline(iss, col[cnt], ',') && cnt < 3)
+        while(getline(iss, col[cnt], ',') && cnt < 3) {
+            col[cnt] = trim(col[cnt]);
             cnt++;
+        }
         if (cnt<3) {
             std::cerr << "invalid row:" << line << std::endl;
             continue;
@@ -63,23 +76,36 @@ readCsvInstTable(std::vector<Instruction> &instList, std::ifstream &finInstSet, 
     istringstream iss;
     getline(finInstSet, line); // ignore first line
     while(getline(finInstSet, line)) {
-        iss.str(line);
+        line = trim(line);
+        if (line.empty())
+            continue;
+        iss.str(line); // reuse iss
+        iss.clear();
         string instName;
         if(!getline(iss, instName, ',')) {
             std::cerr << "invalid row:" << line << std::endl;
             continue;
         }
+        instName = trim(instName);
         if(!getline(iss, token, ',')) {
             std::cerr << "invalid row:" << line << std::endl;
             continue;
         }
+        token = trim(token);
         // TODO: format check
         int memCycle = std::stoi(token, nullptr, 10);
         vector<Instruction::FUNC_TYPE> subFuncList;
         for (int i=0; i<memCycle; i++) {
             if (!getline(iss, token, ','))
                 break;
-            subFuncList.emplace_back(subFuncMap[token]);
+            token = trim(token);
+            auto it = subFuncMap.find(token);
+            if (it == subFuncMap.end()) {
+                std::cerr << "unkown sub function name: \""
+                    << token << "\"" << std::endl;
+                break;
+            }
+            subFuncList.emplace_back(it->second);
         }
         if ((int)subFuncList.size() != memCycle) {
             std::cerr << "invalid row:" << line << std::endl;
@@ -111,7 +137,15 @@ Decoder::Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet) {
 }
 
 IInstruction* Decoder::decode(const uint8_t &opcode) {
-    return &(instList[lutInstIdx[opcode]]);
+    if (lutInstIdx[opcode]>=instList.size()) {
+        std::cerr << "unkown matched opcode 0x" << std::hex << (int) opcode << std::endl;
+        return nullptr;
+    }
+    auto ret = &(instList[lutInstIdx[opcode]]);
+    if (!ret) {
+        std::cerr << "faild to get instruction of opcode" << std::hex << (int) opcode << std::endl;
+    }
+    return ret;
 }
 
 

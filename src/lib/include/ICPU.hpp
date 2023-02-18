@@ -13,9 +13,10 @@ public:
 
     // step one memory cycle until got cpu pipeline documents
     // TODO: func stepOneCPUClock
-    virtual void stepOneCycle() = 0; // 1Hz mem cycle
+    virtual bool stepOneCycle() = 0; // 1Hz mem cycle
 
     // tool functions for GBIT
+    virtual int stepOneInstruction() = 0; // return mem cycle cnt of a INST
     // TODO: remove them from API, or provide Memento Pattern
     virtual Reg getReg() = 0;
     virtual void setReg(const Reg &reg) = 0;

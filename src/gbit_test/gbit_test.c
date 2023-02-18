@@ -27,7 +27,10 @@ int main(int argc, char *argv[]) {
     .print_tested_instruction = 0,
     .print_verbose_inputs = 0,
     };
-    gpLotusGB = lotusGBIT_Create();
+    if (!(gpLotusGB = lotusGBIT_Create())) {
+        fprintf(stderr, "failed to create test object\n");
+        return -1;
+    }
     return tester_run(&flags, &gbLotusOps);
 }
 

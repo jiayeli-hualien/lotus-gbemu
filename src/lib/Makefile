@@ -7,9 +7,13 @@ obj_build_dir := $(build_dir)/obj
 SRCS := $(wildcard *.cpp)
 OBJS := $(patsubst %.cpp,$(obj_build_dir)/%.o,$(SRCS))
 
-all: $(lotus_gb_lib_build_path)
+csv_files_build_path := $(build_dir)/decode_table.csv
+csv_files_build_path += $(build_dir)/instruction_table.csv
+include_path = $(CURDIR)/include
 
-$(obj_build_dir):
+all: $(lotus_gb_lib_build_path) $(csv_files_build_path)
+
+$(obj_build_dir) $(build_dir):
 	mkdir -p $@
 
 $(obj_build_dir)/%.o: %.cpp $(obj_build_dir)
@@ -17,3 +21,6 @@ $(obj_build_dir)/%.o: %.cpp $(obj_build_dir)
 
 $(lotus_gb_lib_build_path): $(OBJS)
 	$(CC) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
+
+$(build_dir)/%.csv: $(include_path)/%.csv $(build_dir)
+	cp $< $@
