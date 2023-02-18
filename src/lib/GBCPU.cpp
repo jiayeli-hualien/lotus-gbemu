@@ -10,8 +10,7 @@ GBCPU::GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder):pMmu(pMmu), pDecoder(pDecod
 }
 
 void GBCPU::fetch(uint16_t addr) {
-    InstState &instStat = instStatBuf[curInst];
-    pInstBuf[curInst] = pDecoder->decode(instStat.opcode = pMmu->read(addr));
+    pInst = pDecoder->decode(instStat.opcode = pMmu->read(addr));
 }
 
 void GBCPU::fetchFirstOpcode() {
@@ -23,8 +22,7 @@ void GBCPU::reset() {
     clockTimeStamp = 0;
     interruptMasterEnable = true;
     isHalt = false;
-    for (auto &stat: instStatBuf)
-        stat = {};
+    instStat = {};
     curInst = 0;
     // load first op
     fetchFirstOpcode();
@@ -33,8 +31,8 @@ void GBCPU::reset() {
 void GBCPU::doFetchNextOp() {
     constexpr int MASK = INST_BUFFER_SIZE-1;
     curInst = (curInst+1)&MASK;
-    instStatBuf[curInst] = {};
-    pInstBuf[curInst] = nullptr;
+    instStat = {};
+    pInst = nullptr;
     fetch(reg.getRefPC()++);
 }
 
@@ -46,8 +44,6 @@ void GBCPU::doMemWrite(InstState &instStat) {
 }
 
 bool GBCPU::stepOneCycle() {
-    InstState &instStat = instStatBuf[curInst];
-    IInstruction * const pInst = pInstBuf[curInst];
     if (!pInst) {
         std::cerr << "last decode failed" << std::endl;
         return false;

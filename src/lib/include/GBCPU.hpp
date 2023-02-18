@@ -36,8 +36,8 @@ private:
     bool isHalt = false;
     static constexpr size_t INST_BUFFER_SIZE_POW2 = 1;
     static constexpr size_t INST_BUFFER_SIZE = 1<<INST_BUFFER_SIZE_POW2;
-    InstState instStatBuf[INST_BUFFER_SIZE] = {};
-    IInstruction *pInstBuf[INST_BUFFER_SIZE] = {};
+    InstState instStat;
+    IInstruction *pInst;
     int curInst = 0;
     Decoder *pDecoder = nullptr;
 };
