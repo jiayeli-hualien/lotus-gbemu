@@ -20,8 +20,9 @@ static subFunMapType getSubFuncMap() {
     // TODO: codegen?
     map["subFuncNOP"] = subFuncNOP();
     map["subFuncLDRR"] = subFuncLDRR();
-    map["subFuncMemRead"] = subFuncMemRead();
-    map["subFuncLDR_IMMD"] = subFuncLDR_IMMD();
+    map["subFuncMemReadPC"] = subFuncMemReadPC();
+    map["subFuncMemReadHL"] = subFuncMemReadHL();
+    map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
     return map;
 }
 
@@ -117,6 +118,16 @@ readCsvInstTable(std::vector<Instruction> &instList, std::ifstream &finInstSet, 
     return instIdx;
 }
 
+void Decoder::showLUT() {
+    for (int opcode=0; opcode<256; opcode++) {
+        auto pInst = reinterpret_cast<Instruction*>(decode(opcode));
+        std::cerr << "LUT[" << std::hex << opcode << "] =";
+        if(pInst)
+            std::cerr << " " << pInst->getName();
+        std::cerr << std::endl;
+    }
+}
+
 Decoder::Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet) {
     subFunMapType subFuncMap = getSubFuncMap();
     vector<DecodeRule> rules = readCsvDecodeTable(finDecodeTable);
@@ -134,11 +145,12 @@ Decoder::Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet) {
             }
         }
     }
+    showLUT();
 }
 
 IInstruction* Decoder::decode(const uint8_t &opcode) {
     if (lutInstIdx[opcode]>=instList.size()) {
-        std::cerr << "unkown matched opcode 0x" << std::hex << (int) opcode << std::endl;
+        // TODO: verbose level
         return nullptr;
     }
     auto ret = &(instList[lutInstIdx[opcode]]);

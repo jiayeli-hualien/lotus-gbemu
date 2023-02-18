@@ -23,6 +23,7 @@ public:
     Instruction(std::string name, int memCycle,
                 std::vector<FUNC_TYPE> &&funcList);
     bool stepOneMemCycle(SUB_FUNC_PARAMS);
+    std::string getName();
 private:
     std::string name = std::string();
     int memCycles = 0;

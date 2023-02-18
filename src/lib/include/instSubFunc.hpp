@@ -14,9 +14,8 @@ http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 #include "Iinstruction.hpp"
 #include "instruction.hpp"
 
-// types for fetcher / factory
-// TODO: fetcher / decoder
-
+// flows of instruction per memory-cycles
+// TODO: codegen? how to handle function not implemented?
 namespace LOTUSGB {
 
 #define SUB_FUNC_DECLARE(x) \
@@ -28,8 +27,9 @@ SUB_FUNC_OP_RET SUB_FUNC_OP;\
 
 SUB_FUNC_DECLARE(subFuncNOP);
 SUB_FUNC_DECLARE(subFuncLDRR);
-SUB_FUNC_DECLARE(subFuncMemRead);
-SUB_FUNC_DECLARE(subFuncLDR_IMMD);
+SUB_FUNC_DECLARE(subFuncMemReadPC);
+SUB_FUNC_DECLARE(subFuncMemReadHL);
+SUB_FUNC_DECLARE(subFuncLDR_MEMVAL);
 
 }
 

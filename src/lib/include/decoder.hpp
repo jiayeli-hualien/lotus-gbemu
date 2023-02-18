@@ -13,6 +13,7 @@ public:
     Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet);
     IInstruction* decode(const uint8_t &opcode);
 private:
+    void showLUT();
     std::vector<Instruction> instList;
     uint8_t lutInstIdx[256];
 };

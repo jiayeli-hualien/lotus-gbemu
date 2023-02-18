@@ -24,6 +24,10 @@ std::vector<FUNC_TYPE> &&funcList):name(name), memCycles(memCycle), funcPerMemCy
         std::cerr << "invalid instruction size" << std::endl;
 }
 
+std::string Instruction::getName() {
+    return name;
+};
+
 bool Instruction::stepOneMemCycle(SUB_FUNC_PARAMS) {
     if (pInstState->memCycleCnt>=memCycles) {
 

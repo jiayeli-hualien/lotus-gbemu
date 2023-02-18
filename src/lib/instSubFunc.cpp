@@ -27,13 +27,17 @@ static inline uint8_t* _getReg(const int &number, Reg *pReg) {
 static uint8_t* getRegLHS(const uint8_t &op, Reg *pReg) {
     constexpr uint8_t MASK = 0x3F;
     const int num = ((op&MASK)>>3U);
-    return _getReg(num, pReg);
+    auto ret = _getReg(num, pReg);
+    if (!ret)
+        std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
+    return ret;
 }
 
 static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
     constexpr uint8_t MASK = 0x07;
     const int num = (op & MASK);
-    return _getReg(num, pReg);
+    auto ret = _getReg(num, pReg);
+    return ret;
 }
 
 
@@ -47,29 +51,29 @@ SUB_FUNC_IMPL(subFuncLDRR) {
     const uint8_t &op = pInstState->inst[0];
     uint8_t *lhs = getRegLHS(op, pReg);
     uint8_t *rhs = getRegRHS(op, pReg);
-    if (!lhs || !rhs) {
-        std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
-        return;
-    }
-    *lhs = *rhs;
+    if (lhs && rhs)
+        *lhs = *rhs;
     INCPC();
 }
 
-SUB_FUNC_IMPL(subFuncMemRead) {
+SUB_FUNC_IMPL(subFuncMemReadPC) {
     // notify CPU to read immediate value
     pInstState->memMode = MEM_MODE_READ;
     pInstState->memAddr = pReg->getRefPC();
-    INCPC();
+    INCPC(); // inc by immdeiate value is read
 }
 
-SUB_FUNC_IMPL(subFuncLDR_IMMD) {
+SUB_FUNC_IMPL(subFuncMemReadHL) {
+    pInstState->memMode = MEM_MODE_READ;
+    pInstState->memAddr = pReg->getRefHL();
+    // don't inc PC becuse don't read immediate value
+}
+
+SUB_FUNC_IMPL(subFuncLDR_MEMVAL) {
     const uint8_t op = pInstState->inst[0];
     uint8_t *lhs = getRegLHS(op, pReg);
-    if (!lhs) {
-        std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
-        return;
-    }
-    *lhs = pInstState->memValue;
+    if (lhs)
+        *lhs = pInstState->memValue;
     INCPC();
 }
 

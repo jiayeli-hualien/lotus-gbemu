@@ -1,4 +1,5 @@
 INSTRUCTION_KEY, MEM_CYCLE, FUNCTION_KEY_LIST
 NOP, 1, subFuncNOP
 LDRR, 1, subFuncLDRR
-LDRN, 2, subFuncMemRead, subFuncLDR_IMMD
+LDRN, 2, subFuncMemReadPC, subFuncLDR_MEMVAL
+LDR_HL, 2, subFuncMemReadHL, subFuncLDR_MEMVAL

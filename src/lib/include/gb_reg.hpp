@@ -4,19 +4,20 @@ A simple C++ class to provide registers set and get
 #ifndef LOTUSGB_REG_H
 #define LOTUSGB_REG_H
 #include <cstdint>
+#include <cmath>
 
 namespace LOTUSGB {
 
 // little endian host
 enum REG_ID {
     REG_ID_A = 0,
-    REG_ID_F,
-    REG_ID_B,
-    REG_ID_C,
-    REG_ID_D,
-    REG_ID_E,
-    REG_ID_H,
-    REG_ID_L,
+    REG_ID_F = 1,
+    REG_ID_B = 3,
+    REG_ID_C = 2,
+    REG_ID_D = 5,
+    REG_ID_E = 4,
+    REG_ID_H = 7,
+    REG_ID_L = 6,
 };
 // TODO: big endian host
 
@@ -41,9 +42,19 @@ public:
     inline uint8_t& getRefH() { return reg8bit[REG_ID_H]; };
     inline uint8_t& getRefL() { return reg8bit[REG_ID_L]; };
 
-    inline uint16_t& getRefBC() { return CAST_REF_TO_16BIT(reg8bit[REG_ID_B]);}
-    inline uint16_t& getRefDE() { return CAST_REF_TO_16BIT(reg8bit[REG_ID_D]);}
-    inline uint16_t& getRefHL() { return CAST_REF_TO_16BIT(reg8bit[REG_ID_H]);}
+    inline uint16_t& getRefBC() {
+        // TODO: Can it handle different endian?
+        constexpr int idx_BC = std::min(REG_ID_B, REG_ID_C);
+        return CAST_REF_TO_16BIT(reg8bit[idx_BC]);
+    }
+    inline uint16_t& getRefDE() {
+        constexpr int idx_DE = std::min(REG_ID_D, REG_ID_E);
+        return CAST_REF_TO_16BIT(reg8bit[idx_DE]);
+    }
+    inline uint16_t& getRefHL() {
+        constexpr int idx_HL = std::min(REG_ID_H, REG_ID_L);
+        return CAST_REF_TO_16BIT(reg8bit[idx_HL]);
+    }
     inline uint16_t& getRefPC() { return pc; };
     inline uint16_t& getRefSP() { return sp; };
 };
