@@ -2,7 +2,7 @@ INSTRUCTION_KEY, MEM_CYCLE, FUNCTION_KEY_LIST
 NOP, 1, subFuncNOP
 LDRR, 1, subFuncLDRR
 LDRN, 2, subFuncMemReadPC, subFuncLDR_MEMVAL
-LDR_HL, 2, subFuncMemReadHL, subFuncLDR_MEMVAL
+LDR_HL, 2, subFuncMemReadIndirect, subFuncLDR_MEMVAL
 LDHL_R, 2, subFuncMemWriteHL, subFuncNOP
 LDHL_N, 3, subFuncMemReadPC, subFuncMemWriteHL, subFuncNOP
-LDA_BC_DE, 2, subFuncMemReadBC_DE, subFuncLDA_MEMVAL
+LDA_BC_DE, 2, subFuncMemReadIndirect, subFuncLDA_MEMVAL

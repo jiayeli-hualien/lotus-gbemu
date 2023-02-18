@@ -47,8 +47,7 @@ subFunMapType getSubFuncMap() {
     map["subFuncNOP"] = subFuncNOP();
     map["subFuncLDRR"] = subFuncLDRR();
     map["subFuncMemReadPC"] = subFuncMemReadPC();
-    map["subFuncMemReadHL"] = subFuncMemReadHL();
-    map["subFuncMemReadBC_DE"] = subFuncMemReadBC_DE();
+    map["subFuncMemReadIndirect"] = subFuncMemReadIndirect();
     map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
     map["subFuncLDA_MEMVAL"] = subFuncLDA_MEMVAL();
     map["subFuncMemWriteHL"] = subFuncMemWriteHL();
@@ -76,22 +75,18 @@ SUB_FUNC_IMPL(subFuncMemReadPC) {
     INCPC(); // inc by immdeiate value is read
 }
 
-SUB_FUNC_IMPL(subFuncMemReadHL) {
+SUB_FUNC_IMPL(subFuncMemReadIndirect) {
     pInstState->memMode = MEM_MODE_READ;
-    pInstState->memAddr = pReg->getRefHL();
-}
-
-SUB_FUNC_IMPL(subFuncMemReadBC_DE) {
-    pInstState->memMode = MEM_MODE_READ;
-    constexpr uint8_t MASK_DE = 0x10;
-    switch(pInstState->opcode & MASK_DE) {
-        case 0:
+    // TODO: remove hard code?
+    switch(pInstState->opcode) {
+        case 0x0A:
             pInstState->memAddr = pReg->getRefBC();
             break;
-        case MASK_DE:
+        case 0x1A:
             pInstState->memAddr = pReg->getRefDE();
             break;
         default:
+            pInstState->memAddr = pReg->getRefHL();
             break;
     }
 }
