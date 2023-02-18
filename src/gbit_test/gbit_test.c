@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
     static struct tester_flags flags = {
     .keep_going_on_mismatch = 1,
     .enable_cb_instruction_testing = 1,
-    .print_tested_instruction = 0,
-    .print_verbose_inputs = 0,
+    .print_tested_instruction = 1,
+    .print_verbose_inputs = 1,
     };
     if (!(gpLotusGB = lotusGBIT_Create())) {
         fprintf(stderr, "failed to create test object\n");

@@ -17,6 +17,7 @@ public:
 
     // tool functions for GBIT
     virtual int stepOneInstruction() = 0; // return mem cycle cnt of a INST
+    virtual void fetchFirstOpcode() = 0;
     // TODO: remove them from API, or provide Memento Pattern
     virtual Reg getReg() = 0;
     virtual void setReg(const Reg &reg) = 0;

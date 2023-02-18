@@ -16,6 +16,7 @@ public:
     bool stepOneCycle();
     int stepOneInstruction();
 
+    void fetchFirstOpcode();
     Reg getReg();
     void setReg(const Reg &reg);
     bool getIME();

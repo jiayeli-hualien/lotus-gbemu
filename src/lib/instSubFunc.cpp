@@ -55,7 +55,6 @@ subFunMapType getSubFuncMap() {
 
 
 SUB_FUNC_IMPL(subFuncNOP){
-    INCPC();
     return;
 }
 
@@ -66,7 +65,6 @@ SUB_FUNC_IMPL(subFuncLDRR) {
     uint8_t *rhs = getRegRHS(op, pReg);
     if (lhs && rhs)
         *lhs = *rhs;
-    INCPC();
 }
 
 SUB_FUNC_IMPL(subFuncMemReadPC) {
@@ -79,7 +77,6 @@ SUB_FUNC_IMPL(subFuncMemReadPC) {
 SUB_FUNC_IMPL(subFuncMemReadHL) {
     pInstState->memMode = MEM_MODE_READ;
     pInstState->memAddr = pReg->getRefHL();
-    // don't inc PC becuse don't read immediate value
 }
 
 SUB_FUNC_IMPL(subFuncMemWriteHL) {
@@ -96,7 +93,6 @@ SUB_FUNC_IMPL(subFuncLDR_MEMVAL) {
     uint8_t *lhs = getRegLHS(op, pReg);
     if (lhs)
         *lhs = pInstState->memValue;
-    INCPC();
 }
 
 }

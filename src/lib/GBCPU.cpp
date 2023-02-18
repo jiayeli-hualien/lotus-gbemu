@@ -17,6 +17,10 @@ void GBCPU::fetch(uint16_t addr) {
     }
 }
 
+void GBCPU::fetchFirstOpcode() {
+    fetch(reg.getRefPC()++);
+}
+
 void GBCPU::reset() {
     reg = {};
     clockTimeStamp = 0;
@@ -26,7 +30,7 @@ void GBCPU::reset() {
         stat = {};
     curInst = 0;
     // load first op
-    fetch(reg.getRefPC());
+    fetchFirstOpcode();
 }
 
 void GBCPU::doFetchNextOp() {
@@ -34,7 +38,7 @@ void GBCPU::doFetchNextOp() {
     curInst = (curInst+1)&MASK;
     instStatBuf[curInst] = {};
     pInstBuf[curInst] = nullptr;
-    fetch(reg.getRefPC());
+    fetch(reg.getRefPC()++);
 }
 
 void GBCPU::doMemRead(InstState &instStat) {

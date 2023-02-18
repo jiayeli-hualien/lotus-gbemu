@@ -12,7 +12,8 @@ void LotusGB::getState(LotusGBState *pState) {
     // TODO: copy all status
     memset(pState, 0, sizeof(LotusGBState));
     Reg reg = pCPU->getReg();
-    pState->pc = reg.getRefPC();
+    // gbit reference CPU don't have parallel fetch/excute overlap
+    pState->pc = reg.getRefPC() - 1;
     pState->sp = reg.getRefSP();
     pState->a = reg.getRefA();
     pState->f = reg.getRefF();
@@ -34,7 +35,7 @@ void LotusGB::init(size_t instruction_mem_size, uint8_t *instruction_mem) {
 void LotusGB::setState(LotusGBState *pState) {
     // TODO: copy all status
     Reg reg;
-    pCPU->reset(); //load first instruction after change state
+    pCPU->reset();
     reg.getRefPC() = pState->pc;
     reg.getRefSP() = pState->sp;
     reg.getRefA() = pState->a;
@@ -48,7 +49,11 @@ void LotusGB::setState(LotusGBState *pState) {
     pCPU->setReg(reg);
     pCPU->setHALT(pState->is_halt);
     pCPU->setIME(pState->interrupts_master_enable);
+
     pMMU->setMemoryState(pState->num_accesses, pState->mem_accesses);
+
+    // workaround for pCPU->reset / setReg order
+    pCPU->fetchFirstOpcode();
 }
 
 int LotusGB::step() {

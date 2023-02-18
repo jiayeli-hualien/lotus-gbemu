@@ -4,3 +4,4 @@ LDRR, 1, subFuncLDRR
 LDRN, 2, subFuncMemReadPC, subFuncLDR_MEMVAL
 LDR_HL, 2, subFuncMemReadHL, subFuncLDR_MEMVAL
 LDHL_R, 2, subFuncMemWriteHL, subFuncNOP
+LDHL_N, 3, subFuncMemReadPC, subFuncMemWriteHL, subFuncNOP
