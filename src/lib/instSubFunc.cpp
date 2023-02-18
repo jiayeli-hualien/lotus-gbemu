@@ -41,6 +41,19 @@ static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
 }
 
 
+subFunMapType getSubFuncMap() {
+    subFunMapType map;
+    // TODO: codegen?
+    map["subFuncNOP"] = subFuncNOP();
+    map["subFuncLDRR"] = subFuncLDRR();
+    map["subFuncMemReadPC"] = subFuncMemReadPC();
+    map["subFuncMemReadHL"] = subFuncMemReadHL();
+    map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
+    map["subFuncMemWriteHL"] = subFuncMemWriteHL();
+    return map;
+}
+
+
 SUB_FUNC_IMPL(subFuncNOP){
     INCPC();
     return;
@@ -67,6 +80,15 @@ SUB_FUNC_IMPL(subFuncMemReadHL) {
     pInstState->memMode = MEM_MODE_READ;
     pInstState->memAddr = pReg->getRefHL();
     // don't inc PC becuse don't read immediate value
+}
+
+SUB_FUNC_IMPL(subFuncMemWriteHL) {
+    pInstState->memMode = MEM_MODE_WRITE;
+    pInstState->memAddr = pReg->getRefHL();
+    const uint8_t op = pInstState->inst[0];
+    uint8_t *rhs = getRegRHS(op, pReg);
+    if (rhs)
+        pInstState->memValue = *rhs;
 }
 
 SUB_FUNC_IMPL(subFuncLDR_MEMVAL) {

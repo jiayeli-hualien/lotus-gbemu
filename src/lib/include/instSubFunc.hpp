@@ -11,6 +11,8 @@ http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 */
 #ifndef LOTUSGB_INST_SUB_FUNC_HPP
 #define LOTUSGB_INST_SUB_FUNC_HPP
+#include <string>
+#include <unordered_map>
 #include "Iinstruction.hpp"
 #include "instruction.hpp"
 
@@ -25,11 +27,15 @@ SUB_FUNC_OP_RET SUB_FUNC_OP;\
 
 #define SUB_FUNC_IMPL(x) SUB_FUNC_OP_RET x::SUB_FUNC_OP
 
+using subFunMapType = std::unordered_map<std::string, Instruction::FUNC_TYPE>;
+subFunMapType getSubFuncMap();
+
 SUB_FUNC_DECLARE(subFuncNOP);
 SUB_FUNC_DECLARE(subFuncLDRR);
 SUB_FUNC_DECLARE(subFuncMemReadPC);
 SUB_FUNC_DECLARE(subFuncMemReadHL);
 SUB_FUNC_DECLARE(subFuncLDR_MEMVAL);
+SUB_FUNC_DECLARE(subFuncMemWriteHL);
 
 }
 

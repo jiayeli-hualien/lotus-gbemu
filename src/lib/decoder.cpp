@@ -14,18 +14,6 @@ using std::getline;
 
 namespace LOTUSGB {
 
-using subFunMapType = unordered_map<string, Instruction::FUNC_TYPE>;
-static subFunMapType getSubFuncMap() {
-    subFunMapType map;
-    // TODO: codegen?
-    map["subFuncNOP"] = subFuncNOP();
-    map["subFuncLDRR"] = subFuncLDRR();
-    map["subFuncMemReadPC"] = subFuncMemReadPC();
-    map["subFuncMemReadHL"] = subFuncMemReadHL();
-    map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
-    return map;
-}
-
 struct DecodeRule {
     string instName;
     uint8_t mask = 0;
