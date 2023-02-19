@@ -2,9 +2,9 @@ INSTRUCTION_KEY, MEM_CYCLE, FUNCTION_KEY_LIST
 NOP, 1, subFuncNOP
 LD_R_R, 1, subFuncLDRR
 LD_R_N, 2, subFuncMemReadPC, subFuncLD_R_MEMVAL
-LD_R_HL, 2, subFuncMemReadIndirect, subFuncLD_R_MEMVAL
-LD_HL_R, 2, subFuncMemWriteIndirect, subFuncNOP
-LD_HL_N, 3, subFuncMemReadPC, subFuncMemWriteIndirect, subFuncNOP
-LD_A_BC_DE, 2, subFuncMemReadIndirect, subFuncLD_A_MEMVAL
-LD_BC_DE_A, 2, subFuncMemWriteIndirect, subFuncNOP
-LD_A_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemReadIndirect, subFuncLD_A_MEMVAL
+LD_R_HL, 2, subFuncMemReadIndirectHL, subFuncLD_R_MEMVAL
+LD_HL_R, 2, subFuncMemWriteIndirectHL, subFuncNOP
+LD_HL_N, 3, subFuncMemReadPC, subFuncMemWriteIndirectHL, subFuncNOP
+LD_A_BC_DE, 2, subFuncMemReadIndirectBC_DE, subFuncLD_A_MEMVAL
+LD_BC_DE_A, 2, subFuncMemWriteIndirectBC_DE, subFuncNOP
+LD_A_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemReadIndirectA16, subFuncLD_A_MEMVAL
