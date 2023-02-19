@@ -30,6 +30,7 @@ class Reg {
 
     uint16_t sp = 0;
     uint16_t pc = 0;
+    uint16_t a16Addr = 0;
 public:
     // TODO: more regs
     // TODO: move function to a .cpp file

@@ -11,6 +11,8 @@ enum MEM_MODE {
     MEM_MODE_NONE = 0,
     MEM_MODE_READ,
     MEM_MODE_WRITE,
+    MEM_MODE_READ_ADDR_LSB, // TODO: let instruction access memory?
+    MEM_MODE_READ_ADDR_MSB,
 };
 
 static constexpr size_t MAX_INST_LEN = 4; // in bytes, acutaly 3 but align 4
@@ -21,6 +23,8 @@ struct InstState {
     MEM_MODE memMode = MEM_MODE_NONE;
     uint8_t memValue = 0; // value read from memory or will to write to memory
     uint16_t memAddr = 0;
+    // TODO: find better place for a16addr
+    uint16_t a16Addr = 0;
 
     // TODO: system clock / interrupt handler
     bool setHalt = false;

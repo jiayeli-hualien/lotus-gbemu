@@ -39,6 +39,14 @@ void GBCPU::doFetchNextOp() {
 void GBCPU::doMemRead(InstState &instStat) {
     instStat.memValue = pMmu->read(instStat.memAddr);
 }
+void GBCPU::doMemReadAddrLSB(InstState &instStat) {
+    const uint8_t tmp = pMmu->read(instStat.memAddr);
+    instStat.a16Addr = 0xFF00 | tmp;
+}
+void GBCPU::doMemReadAddrMSB(InstState &instStat) {
+    const uint8_t tmp = pMmu->read(instStat.memAddr);
+    instStat.a16Addr = (tmp << 8U) | (instStat.a16Addr & 0xFF);
+}
 void GBCPU::doMemWrite(InstState &instStat) {
     pMmu->write(instStat.memAddr,  instStat.memValue);
 }
@@ -56,6 +64,8 @@ bool GBCPU::stepOneCycle() {
         case MEM_MODE_NONE: doFetchNextOp(); break;
         case MEM_MODE_READ: doMemRead(instStat); break;
         case MEM_MODE_WRITE: doMemWrite(instStat); break;
+        case MEM_MODE_READ_ADDR_LSB: doMemReadAddrLSB(instStat); break;
+        case MEM_MODE_READ_ADDR_MSB: doMemReadAddrMSB(instStat); break;
         default:
             break;
     }

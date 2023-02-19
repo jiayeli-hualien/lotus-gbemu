@@ -27,6 +27,8 @@ private:
     void fetch(uint16_t addr);
     void doFetchNextOp();
     void doMemRead(InstState &instStat);
+    void doMemReadAddrMSB(InstState &instStat);
+    void doMemReadAddrLSB(InstState &instStat);
     void doMemWrite(InstState &instStat);
 
     IMemoryAccess *pMmu;

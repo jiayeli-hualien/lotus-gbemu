@@ -7,3 +7,4 @@ LD_HL_R, 2, subFuncMemWriteIndirect, subFuncNOP
 LD_HL_N, 3, subFuncMemReadPC, subFuncMemWriteIndirect, subFuncNOP
 LD_A_BC_DE, 2, subFuncMemReadIndirect, subFuncLDR_MEMVAL
 LD_BC_DE_A, 2, subFuncMemWriteIndirect, subFuncNOP
+LD_A_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemReadIndirect, subFuncLDR_MEMVAL

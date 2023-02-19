@@ -7,8 +7,6 @@
 
 namespace LOTUSGB {
 
-#define INCPC() (++(pReg->getRefPC()))
-
 static inline uint8_t* _getReg(const int &number, Reg *pReg) {
     switch (number) {
         case 0: return &pReg->getRefB();
@@ -29,6 +27,8 @@ static uint8_t* getRegLHS(const uint8_t &op, Reg *pReg) {
     {
         case 0x0A:
         case 0x1A:
+        case 0xEA:
+        case 0xFA:
             return &(pReg->getRefA());
         default:
             constexpr uint8_t MASK = 0x3F;
@@ -64,6 +64,8 @@ subFunMapType getSubFuncMap() {
     map["subFuncMemReadIndirect"] = subFuncMemReadIndirect();
     map["subFuncMemWriteIndirect"] = subFuncMemWriteIndirect();
     map["subFuncLDR_MEMVAL"] = subFuncLDR_MEMVAL();
+    map["subFuncReadA16LSB"] = subFuncReadA16LSB();
+    map["subFuncReadA16MSB"] = subFuncReadA16MSB();
 
     return map;
 }
@@ -85,26 +87,42 @@ SUB_FUNC_IMPL(subFuncLDRR) {
 SUB_FUNC_IMPL(subFuncMemReadPC) {
     // notify CPU to read immediate value
     pInstState->memMode = MEM_MODE_READ;
-    pInstState->memAddr = pReg->getRefPC();
-    INCPC(); // inc by immdeiate value is read
+    pInstState->memAddr = pReg->getRefPC()++;
 }
 
-static uint16_t& _getIndreictReg16(const uint8_t &opcode, Reg *pReg) {
-    switch(opcode & 0xF0) {
-        case 0x00: return pReg->getRefBC();
-        case 0x10: return pReg->getRefDE();
-        default: return pReg->getRefHL();
+static uint16_t& _getIndreictReg16(InstState *pInstState, Reg *pReg) {
+    switch(pInstState->opcode) {
+        case 0x02:
+        case 0x0A:
+            return pReg->getRefBC();
+        case 0x12:
+        case 0x1A:
+            return pReg->getRefDE();
+        case 0xFA:
+            return pInstState->a16Addr;
+        default:
+            return pReg->getRefHL();
     }
 }
 
 SUB_FUNC_IMPL(subFuncMemReadIndirect) {
     pInstState->memMode = MEM_MODE_READ;
-    pInstState->memAddr = _getIndreictReg16(pInstState->opcode, pReg);
+    pInstState->memAddr = _getIndreictReg16(pInstState, pReg);
+}
+
+SUB_FUNC_IMPL(subFuncReadA16LSB) {
+    pInstState->memMode = MEM_MODE_READ_ADDR_LSB;
+    pInstState->memAddr = pReg->getRefPC()++;
+}
+
+SUB_FUNC_IMPL(subFuncReadA16MSB) {
+    pInstState->memMode = MEM_MODE_READ_ADDR_MSB;
+    pInstState->memAddr = pReg->getRefPC()++;
 }
 
 SUB_FUNC_IMPL(subFuncMemWriteIndirect) {
     pInstState->memMode = MEM_MODE_WRITE;
-    pInstState->memAddr = _getIndreictReg16(pInstState->opcode, pReg);
+    pInstState->memAddr = _getIndreictReg16(pInstState, pReg);
     uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
     if (rhs)
         pInstState->memValue = *rhs;
