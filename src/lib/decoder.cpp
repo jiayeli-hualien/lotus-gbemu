@@ -58,6 +58,25 @@ readCsvDecodeTable(std::ifstream &finDecodeTable) {
     return rules;
 }
 
+static bool getSubFuncList(vector<Instruction::FUNC_TYPE> &subFuncList,
+                           istringstream &iss, int memCycle,
+                           subFunMapType &subFuncMap) {
+    string token;
+    for (int i=0; i<memCycle; i++) {
+        if (!getline(iss, token, ','))
+            return false;
+        token = trim(token);
+        auto it = subFuncMap.find(token);
+        if (it == subFuncMap.end()) {
+            std::cerr << "unkown sub function name: \""
+                << token << "\"" << std::endl;
+            return false;
+        }
+        subFuncList.emplace_back(it->second);
+    }
+    return true;
+}
+
 static unordered_map<string, int>
 readCsvInstTable(std::vector<Instruction> &instList, std::ifstream &finInstSet, subFunMapType &subFuncMap) {
     unordered_map<string, int> instIdx;
@@ -84,17 +103,9 @@ readCsvInstTable(std::vector<Instruction> &instList, std::ifstream &finInstSet, 
         // TODO: format check
         int memCycle = std::stoi(token, nullptr, 10);
         vector<Instruction::FUNC_TYPE> subFuncList;
-        for (int i=0; i<memCycle; i++) {
-            if (!getline(iss, token, ','))
-                break;
-            token = trim(token);
-            auto it = subFuncMap.find(token);
-            if (it == subFuncMap.end()) {
-                std::cerr << "unkown sub function name: \""
-                    << token << "\"" << std::endl;
-                break;
-            }
-            subFuncList.emplace_back(it->second);
+        if (!getSubFuncList(subFuncList, iss, memCycle, subFuncMap)) {
+            std::cerr << "invalid row:" << line << std::endl;
+            continue;
         }
         if ((int)subFuncList.size() != memCycle) {
             std::cerr << "invalid row:" << line << std::endl;
