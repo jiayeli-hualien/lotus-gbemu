@@ -66,6 +66,7 @@ bool GBCPU::stepOneCycle() {
         case MEM_MODE_WRITE: doMemWrite(instStat); break;
         case MEM_MODE_READ_ADDR_LSB: doMemReadAddrLSB(instStat); break;
         case MEM_MODE_READ_ADDR_MSB: doMemReadAddrMSB(instStat); break;
+        case MEM_MODE_SLEEP:
         default:
             break;
     }

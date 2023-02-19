@@ -48,6 +48,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncLD_R_MEMVAL);
     MAP_ENTRY(subFuncLD_A_MEMVAL);
     MAP_ENTRY(subFuncLD_R16_MEM16);
+    MAP_ENTRY(subFuncLD_SP_HL);
     MAP_ENTRY(subFuncMemReadPC);
     MAP_ENTRY(subFuncMemReadIndirectHL);
     MAP_ENTRY(subFuncMemReadIndirectHLDec);
@@ -81,6 +82,11 @@ SUB_FUNC_IMPL(subFuncLDRR) {
     uint8_t *rhs = getRegRHS(op, pReg);
     if (lhs && rhs)
         *lhs = *rhs;
+}
+
+SUB_FUNC_IMPL(subFuncLD_SP_HL) {
+    pInstState->memMode = MEM_MODE_SLEEP;
+    pReg->getRefSP() = pReg->getRefHL();
 }
 
 SUB_FUNC_IMPL(subFuncMemReadPC) {

@@ -13,6 +13,7 @@ enum MEM_MODE {
     MEM_MODE_WRITE,
     MEM_MODE_READ_ADDR_LSB, // TODO: let instruction access memory?
     MEM_MODE_READ_ADDR_MSB,
+    MEM_MODE_SLEEP,
 };
 
 static constexpr size_t MAX_INST_LEN = 4; // in bytes, acutaly 3 but align 4
