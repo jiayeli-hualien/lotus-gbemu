@@ -32,6 +32,9 @@ subFunMapType getSubFuncMap();
 
 SUB_FUNC_DECLARE(subFuncNOP);
 SUB_FUNC_DECLARE(subFuncLDRR);
+SUB_FUNC_DECLARE(subFuncLD_R_MEMVAL);
+// TODO: get the realy GB pipeline, is there a subFuncLD_A_MEMVAL?
+SUB_FUNC_DECLARE(subFuncLD_A_MEMVAL);
 SUB_FUNC_DECLARE(subFuncMemReadPC);
 SUB_FUNC_DECLARE(subFuncMemReadIndirectHL);
 SUB_FUNC_DECLARE(subFuncMemReadIndirectBC_DE);
@@ -43,9 +46,6 @@ SUB_FUNC_DECLARE(subFuncMemWriteIndirectA16);
 SUB_FUNC_DECLARE(subFuncWriteHighC);
 SUB_FUNC_DECLARE(subFuncReadA16LSB);
 SUB_FUNC_DECLARE(subFuncReadA16MSB);
-SUB_FUNC_DECLARE(subFuncLD_R_MEMVAL);
-// TODO: get the realy GB pipeline, is there a subFuncLD_A_MEMVAL?
-SUB_FUNC_DECLARE(subFuncLD_A_MEMVAL);
 
 }
 

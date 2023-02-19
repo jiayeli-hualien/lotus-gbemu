@@ -42,21 +42,22 @@ static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
 subFunMapType getSubFuncMap() {
     subFunMapType map;
     // TODO: codegen?
-    map["subFuncNOP"] = subFuncNOP();
-    map["subFuncLDRR"] = subFuncLDRR();
-    map["subFuncMemReadPC"] = subFuncMemReadPC();
-    map["subFuncMemReadIndirectHL"] = subFuncMemReadIndirectHL();
-    map["subFuncMemReadIndirectBC_DE"] = subFuncMemReadIndirectBC_DE();
-    map["subFuncMemReadIndirectA16"] = subFuncMemReadIndirectA16();
-    map["subFuncReadHighC"] = subFuncReadHighC();
-    map["subFuncMemWriteIndirectHL"] = subFuncMemWriteIndirectHL();
-    map["subFuncMemWriteIndirectBC_DE"] = subFuncMemWriteIndirectBC_DE();
-    map["subFuncMemWriteIndirectA16"] = subFuncMemWriteIndirectA16();
-    map["subFuncWriteHighC"] = subFuncWriteHighC();
-    map["subFuncLD_R_MEMVAL"] = subFuncLD_R_MEMVAL();
-    map["subFuncLD_A_MEMVAL"] = subFuncLD_A_MEMVAL();
-    map["subFuncReadA16LSB"] = subFuncReadA16LSB();
-    map["subFuncReadA16MSB"] = subFuncReadA16MSB();
+#define MAP_ENTRY(name) (map[#name]=name())
+    MAP_ENTRY(subFuncNOP);
+    MAP_ENTRY(subFuncLDRR);
+    MAP_ENTRY(subFuncLD_R_MEMVAL);
+    MAP_ENTRY(subFuncLD_A_MEMVAL);
+    MAP_ENTRY(subFuncMemReadPC);
+    MAP_ENTRY(subFuncMemReadIndirectHL);
+    MAP_ENTRY(subFuncMemReadIndirectBC_DE);
+    MAP_ENTRY(subFuncMemReadIndirectA16);
+    MAP_ENTRY(subFuncReadHighC);
+    MAP_ENTRY(subFuncMemWriteIndirectHL);
+    MAP_ENTRY(subFuncMemWriteIndirectBC_DE);
+    MAP_ENTRY(subFuncMemWriteIndirectA16);
+    MAP_ENTRY(subFuncWriteHighC);
+    MAP_ENTRY(subFuncReadA16LSB);
+    MAP_ENTRY(subFuncReadA16MSB);
 
     return map;
 }
