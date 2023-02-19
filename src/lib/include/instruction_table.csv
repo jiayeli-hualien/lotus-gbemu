@@ -13,3 +13,5 @@ LDH_A_N, 3, subFuncReadA16LSB, subFuncMemReadIndirectA16, subFuncLD_A_MEMVAL
 LDH_N_A, 3, subFuncReadA16LSB, subFuncMemWriteIndirectA16, subFuncNOP
 LDH_A_C, 2, subFuncReadHighC, subFuncLD_A_MEMVAL
 LDH_C_A, 2, subFuncWriteHighC, subFuncNOP
+LD_A_HL_DEC, 2, subFuncMemReadIndirectHLDec, subFuncLD_A_MEMVAL
+LD_HL_DEC_A, 2, subFuncMemWriteIndirectHLDec, subFuncNOP

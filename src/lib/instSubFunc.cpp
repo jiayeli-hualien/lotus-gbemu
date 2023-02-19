@@ -49,10 +49,12 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncLD_A_MEMVAL);
     MAP_ENTRY(subFuncMemReadPC);
     MAP_ENTRY(subFuncMemReadIndirectHL);
+    MAP_ENTRY(subFuncMemReadIndirectHLDec);
     MAP_ENTRY(subFuncMemReadIndirectBC_DE);
     MAP_ENTRY(subFuncMemReadIndirectA16);
     MAP_ENTRY(subFuncReadHighC);
     MAP_ENTRY(subFuncMemWriteIndirectHL);
+    MAP_ENTRY(subFuncMemWriteIndirectHLDec);
     MAP_ENTRY(subFuncMemWriteIndirectBC_DE);
     MAP_ENTRY(subFuncMemWriteIndirectA16);
     MAP_ENTRY(subFuncWriteHighC);
@@ -99,6 +101,11 @@ SUB_FUNC_IMPL(subFuncMemReadIndirectHL) {
     pInstState->memAddr = pReg->getRefHL();
 }
 
+SUB_FUNC_IMPL(subFuncMemReadIndirectHLDec) {
+    pInstState->memMode = MEM_MODE_READ;
+    pInstState->memAddr = pReg->getRefHL()--;
+}
+
 SUB_FUNC_IMPL(subFuncMemReadIndirectBC_DE) {
     pInstState->memMode = MEM_MODE_READ;
     pInstState->memAddr = _getIndreictRegBC_DE(pInstState, pReg);
@@ -130,6 +137,12 @@ SUB_FUNC_IMPL(subFuncMemWriteIndirectHL) {
     uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
     if (rhs)
         pInstState->memValue = *rhs;
+}
+
+SUB_FUNC_IMPL(subFuncMemWriteIndirectHLDec) {
+    pInstState->memMode = MEM_MODE_WRITE;
+    pInstState->memAddr = pReg->getRefHL()--;
+    pInstState->memValue = pReg->getRefA();
 }
 
 SUB_FUNC_IMPL(subFuncMemWriteIndirectBC_DE) {
