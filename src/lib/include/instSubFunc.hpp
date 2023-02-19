@@ -38,6 +38,7 @@ SUB_FUNC_DECLARE(subFuncMemReadIndirectBC_DE);
 SUB_FUNC_DECLARE(subFuncMemReadIndirectA16);
 SUB_FUNC_DECLARE(subFuncMemWriteIndirectHL);
 SUB_FUNC_DECLARE(subFuncMemWriteIndirectBC_DE);
+SUB_FUNC_DECLARE(subFuncMemWriteIndirectA16);
 SUB_FUNC_DECLARE(subFuncReadA16LSB);
 SUB_FUNC_DECLARE(subFuncReadA16MSB);
 SUB_FUNC_DECLARE(subFuncLD_R_MEMVAL);

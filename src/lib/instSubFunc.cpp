@@ -50,6 +50,7 @@ subFunMapType getSubFuncMap() {
     map["subFuncMemReadIndirectA16"] = subFuncMemReadIndirectA16();
     map["subFuncMemWriteIndirectHL"] = subFuncMemWriteIndirectHL();
     map["subFuncMemWriteIndirectBC_DE"] = subFuncMemWriteIndirectBC_DE();
+    map["subFuncMemWriteIndirectA16"] = subFuncMemWriteIndirectA16();
     map["subFuncLD_R_MEMVAL"] = subFuncLD_R_MEMVAL();
     map["subFuncLD_A_MEMVAL"] = subFuncLD_A_MEMVAL();
     map["subFuncReadA16LSB"] = subFuncReadA16LSB();
@@ -126,6 +127,12 @@ SUB_FUNC_IMPL(subFuncMemWriteIndirectHL) {
 SUB_FUNC_IMPL(subFuncMemWriteIndirectBC_DE) {
     pInstState->memMode = MEM_MODE_WRITE;
     pInstState->memAddr = _getIndreictRegBC_DE(pInstState, pReg);
+    pInstState->memValue = pReg->getRefA();
+}
+
+SUB_FUNC_IMPL(subFuncMemWriteIndirectA16) {
+    pInstState->memMode = MEM_MODE_WRITE;
+    pInstState->memAddr = pInstState->a16Addr;
     pInstState->memValue = pReg->getRefA();
 }
 
