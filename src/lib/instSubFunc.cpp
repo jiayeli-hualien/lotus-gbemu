@@ -47,6 +47,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncLDRR);
     MAP_ENTRY(subFuncLD_R_MEMVAL);
     MAP_ENTRY(subFuncLD_A_MEMVAL);
+    MAP_ENTRY(subFuncLD_R16_MEM16);
     MAP_ENTRY(subFuncMemReadPC);
     MAP_ENTRY(subFuncMemReadIndirectHL);
     MAP_ENTRY(subFuncMemReadIndirectHLDec);
@@ -184,6 +185,15 @@ SUB_FUNC_IMPL(subFuncLD_R_MEMVAL) {
 
 SUB_FUNC_IMPL(subFuncLD_A_MEMVAL) {
     pReg->getRefA() = pInstState->memValue;
+}
+
+SUB_FUNC_IMPL(subFuncLD_R16_MEM16) {
+    switch((pInstState->opcode >> 4)&0x3) {
+        case 0: pReg->getRefBC() = pInstState->a16Addr; break;
+        case 1: pReg->getRefDE() = pInstState->a16Addr; break;
+        case 2: pReg->getRefHL() = pInstState->a16Addr; break;
+        case 3: pReg->getRefSP() = pInstState->a16Addr; break;
+    }
 }
 
 }

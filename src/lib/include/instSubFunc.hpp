@@ -35,6 +35,7 @@ SUB_FUNC_DECLARE(subFuncLDRR);
 SUB_FUNC_DECLARE(subFuncLD_R_MEMVAL);
 // TODO: get the realy GB pipeline, is there a subFuncLD_A_MEMVAL?
 SUB_FUNC_DECLARE(subFuncLD_A_MEMVAL);
+SUB_FUNC_DECLARE(subFuncLD_R16_MEM16);
 SUB_FUNC_DECLARE(subFuncMemReadPC);
 SUB_FUNC_DECLARE(subFuncMemReadIndirectHL);
 SUB_FUNC_DECLARE(subFuncMemReadIndirectHLDec);

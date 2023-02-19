@@ -17,3 +17,4 @@ LD_A_HL_DEC, 2, subFuncMemReadIndirectHLDec, subFuncLD_A_MEMVAL
 LD_HL_DEC_A, 2, subFuncMemWriteIndirectHLDec, subFuncNOP
 LD_A_HL_INC, 2, subFuncMemReadIndirectHLInc, subFuncLD_A_MEMVAL
 LD_HL_INC_A, 2, subFuncMemWriteIndirectHLInc, subFuncNOP
+LD_RR_NN, 3, subFuncReadA16LSB, subFuncReadA16MSB, subFuncLD_R16_MEM16
