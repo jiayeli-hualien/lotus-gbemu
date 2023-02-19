@@ -41,7 +41,7 @@ void GBCPU::doMemRead(InstState &instStat) {
 }
 void GBCPU::doMemReadAddrLSB(InstState &instStat) {
     const uint8_t tmp = pMmu->read(instStat.memAddr);
-    instStat.a16Addr = 0xFF00 | tmp;
+    instStat.a16Addr = HIGH_MEM_ADDR | tmp;
 }
 void GBCPU::doMemReadAddrMSB(InstState &instStat) {
     const uint8_t tmp = pMmu->read(instStat.memAddr);

@@ -2,11 +2,11 @@
 #define LOTUSGB_IINSTRUCTION_HPP
 #include <cstdint>
 #include <cstddef>
-#include "IMemoryAccess.hpp"
 #include "gb_reg.hpp"
 
 namespace LOTUSGB {
 
+static const uint16_t HIGH_MEM_ADDR = 0xFF00;
 enum MEM_MODE {
     MEM_MODE_NONE = 0,
     MEM_MODE_READ,
