@@ -10,8 +10,8 @@ namespace LOTUSGB {
 
 // little endian host
 enum REG_ID {
-    REG_ID_A = 0,
-    REG_ID_F = 1,
+    REG_ID_A = 1,
+    REG_ID_F = 0,
     REG_ID_B = 3,
     REG_ID_C = 2,
     REG_ID_D = 5,
@@ -55,6 +55,10 @@ public:
     inline uint16_t& getRefHL() {
         constexpr int idx_HL = std::min(REG_ID_H, REG_ID_L);
         return CAST_REF_TO_16BIT(reg8bit[idx_HL]);
+    }
+    inline uint16_t& getRefAF() {
+        constexpr int idx_AF = std::min(REG_ID_A, REG_ID_F);
+        return CAST_REF_TO_16BIT(reg8bit[idx_AF]);
     }
     inline uint16_t& getRefPC() { return pc; };
     inline uint16_t& getRefSP() { return sp; };

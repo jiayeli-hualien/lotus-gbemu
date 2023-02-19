@@ -49,6 +49,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncLD_A_MEMVAL);
     MAP_ENTRY(subFuncLD_R16_MEM16);
     MAP_ENTRY(subFuncLD_SP_HL);
+    MAP_ENTRY(subFuncPUSH_LD_A16_RR);
     MAP_ENTRY(subFuncMemReadPC);
     MAP_ENTRY(subFuncMemReadIndirectHL);
     MAP_ENTRY(subFuncMemReadIndirectHLDec);
@@ -66,6 +67,8 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncWriteHighC);
     MAP_ENTRY(subFuncReadA16LSB);
     MAP_ENTRY(subFuncReadA16MSB);
+    MAP_ENTRY(subFuncPUSH_A16_MSB);
+    MAP_ENTRY(subFuncPUSH_A16_LSB);
 
     return map;
 }
@@ -87,6 +90,22 @@ SUB_FUNC_IMPL(subFuncLDRR) {
 SUB_FUNC_IMPL(subFuncLD_SP_HL) {
     pInstState->memMode = MEM_MODE_SLEEP;
     pReg->getRefSP() = pReg->getRefHL();
+}
+
+static uint16_t& _getPushPopReg16(uint8_t op, Reg *pReg) {
+    switch((op >> 4) & 0x03) {
+        case 0: return pReg->getRefBC();
+        case 1: return pReg->getRefDE();
+        case 2: return pReg->getRefHL();
+        case 3:
+        default:
+            return pReg->getRefAF();
+    }
+}
+
+SUB_FUNC_IMPL(subFuncPUSH_LD_A16_RR) {
+    pInstState->memMode = MEM_MODE_SLEEP;
+    pInstState->a16Addr = _getPushPopReg16(pInstState->opcode, pReg);
 }
 
 SUB_FUNC_IMPL(subFuncMemReadPC) {
@@ -220,6 +239,18 @@ SUB_FUNC_IMPL(subFuncLD_A_MEMVAL) {
 
 SUB_FUNC_IMPL(subFuncLD_R16_MEM16) {
     _getCommonReg16(pInstState->opcode, pReg) = pInstState->a16Addr;
+}
+
+SUB_FUNC_IMPL(subFuncPUSH_A16_MSB) {
+    pInstState->memMode = MEM_MODE_WRITE;
+    pInstState->memAddr = --pReg->getRefSP();
+    pInstState->memValue = (pInstState->a16Addr>>8)&0xFF;
+}
+
+SUB_FUNC_IMPL(subFuncPUSH_A16_LSB) {
+    pInstState->memMode = MEM_MODE_WRITE;
+    pInstState->memAddr = --pReg->getRefSP();
+    pInstState->memValue = (pInstState->a16Addr)&0xFF;
 }
 
 }

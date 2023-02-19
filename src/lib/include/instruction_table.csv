@@ -20,3 +20,4 @@ LD_HL_INC_A, 2, subFuncMemWriteIndirectHLInc, subFuncNOP
 LD_RR_NN, 3, subFuncReadA16LSB, subFuncReadA16MSB, subFuncLD_R16_MEM16
 LD_NN_SP, 5, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemWriteSPA16LSB, subFuncMemWriteSPA16MSB, subFuncNOP
 LD_SP_HL, 2, subFuncLD_SP_HL, subFuncNOP
+PUSH_RR, 4, subFuncPUSH_LD_A16_RR, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncNOP

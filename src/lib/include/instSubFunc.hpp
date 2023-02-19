@@ -38,6 +38,8 @@ SUB_FUNC_DECLARE(subFuncLD_A_MEMVAL);
 SUB_FUNC_DECLARE(subFuncLD_R16_MEM16);
 // TODO: check why LD SP, HL need 2 cycles
 SUB_FUNC_DECLARE(subFuncLD_SP_HL);
+// TODO: check why don't PUSH Reg16 start writing from the first cycle?
+SUB_FUNC_DECLARE(subFuncPUSH_LD_A16_RR);
 SUB_FUNC_DECLARE(subFuncMemReadPC);
 SUB_FUNC_DECLARE(subFuncMemReadIndirectHL);
 SUB_FUNC_DECLARE(subFuncMemReadIndirectHLDec);
@@ -55,6 +57,8 @@ SUB_FUNC_DECLARE(subFuncMemWriteSPA16MSB);
 SUB_FUNC_DECLARE(subFuncWriteHighC);
 SUB_FUNC_DECLARE(subFuncReadA16LSB);
 SUB_FUNC_DECLARE(subFuncReadA16MSB);
+SUB_FUNC_DECLARE(subFuncPUSH_A16_MSB);
+SUB_FUNC_DECLARE(subFuncPUSH_A16_LSB);
 
 }
 
