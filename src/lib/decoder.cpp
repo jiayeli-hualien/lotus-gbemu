@@ -74,6 +74,11 @@ static bool getSubFuncList(vector<Instruction::FUNC_TYPE> &subFuncList,
         }
         subFuncList.emplace_back(it->second);
     }
+    if (getline(iss, token, ',')) {
+        std::cerr << "too may subfunction: \""
+            << token << "\"" << std::endl;
+        return false;
+    }
     return true;
 }
 
