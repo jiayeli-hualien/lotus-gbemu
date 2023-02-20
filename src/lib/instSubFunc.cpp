@@ -72,6 +72,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncPUSH_A16_LSB);
     MAP_ENTRY(subFuncPOP_LD_A16_LSB);
     MAP_ENTRY(subFuncPOP_LD_A16_MSB);
+    MAP_ENTRY(subFuncAddA_R);
 
     return map;
 }
@@ -272,6 +273,21 @@ SUB_FUNC_IMPL(subFuncPOP_LD_A16_LSB) {
 SUB_FUNC_IMPL(subFuncPOP_LD_A16_MSB) {
     pInstState->memMode = MEM_MODE_READ_ADDR_MSB;
     pInstState->memAddr = pReg->getRefSP()++;
+}
+
+
+SUB_FUNC_IMPL(subFuncAddA_R) {
+    GB_Flag flag;
+    uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
+    if (!rhs)
+        return;
+    uint8_t const result = (pReg->getRefA()) + (*rhs);
+    flag.Z = (!result);
+    flag.N = false;
+    flag.H = (pReg->getRefA()&0xFU)+(*rhs&0xFU)>0xFU; // sum of lower bits
+    flag.C = (result < pReg->getRefA()) || (result < *rhs); // overflow
+    pReg->setFlag(flag);
+    pReg->getRefA() = result;
 }
 
 }

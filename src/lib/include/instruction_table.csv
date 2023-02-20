@@ -22,3 +22,4 @@ LD_NN_SP, 5, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemWriteSPA16LSB, subF
 LD_SP_HL, 2, subFuncLD_SP_HL, subFuncNOP
 PUSH_RR, 4, subFuncPUSH_LD_A16_RR, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncNOP
 POP_RR, 3, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncPOP_LD_R16_MEM16
+ADD_A_R, 1, subFuncAddA_R

@@ -23,6 +23,15 @@ enum REG_ID {
 
 
 #define CAST_REF_TO_16BIT(x) (*((uint16_t*)(&x)))
+#define REG_GET_BIT_N(x, n) (((uint32_t)(x)>>((uint32_t)(n)))&1U)
+#define REG_U32_L_SHIFT(x, n) (((uint32_t)(x))<<((uint32_t)(n)))
+
+struct GB_Flag {
+  bool Z = false; // result is zero
+  bool N = false;
+  bool H = false; // half carry
+  bool C = false; // carry
+};
 
 class Reg {
     static const int REG_8BIT_NUM = 8;
@@ -62,6 +71,21 @@ public:
     }
     inline uint16_t& getRefPC() { return pc; };
     inline uint16_t& getRefSP() { return sp; };
+    inline void getFlag(GB_Flag &flag) {
+        const uint8_t &f = getRefF();
+        flag.Z = (REG_GET_BIT_N(f, 7U));
+        flag.N = (REG_GET_BIT_N(f, 6U));
+        flag.H = (REG_GET_BIT_N(f, 5U));
+        flag.C = (REG_GET_BIT_N(f, 4U));
+    };
+    inline void setFlag(GB_Flag &flag) {
+        uint8_t &f = getRefF();
+        f = (uint8_t)(
+            REG_U32_L_SHIFT(flag.Z, 7U)|
+            REG_U32_L_SHIFT(flag.N, 6U)|
+            REG_U32_L_SHIFT(flag.H, 5U)|
+            REG_U32_L_SHIFT(flag.C, 4U));
+    };
 };
 
 }
