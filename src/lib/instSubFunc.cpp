@@ -276,32 +276,43 @@ SUB_FUNC_IMPL(subFuncPOP_LD_A16_MSB) {
     pInstState->memAddr = pReg->getRefSP()++;
 }
 
+// int for leverage int promotion
+static constexpr int BYTE_MASK = 0xFF;
+static constexpr int HALF_MASK = 0xF;
+#define GET_LSB(x) ((uint8_t)(x & BYTE_MASK))
+#define GET_LSB_INT(x) (x & BYTE_MASK)
+#define GET_HALF_INT(x) (x & HALF_MASK)
+static constexpr int HALF_UPPER_BOUND = 0xF;
+static constexpr int BYTE_UPPER_BOUND = 0xFF;
+#define HALF_OP_HELPER(x, op, y) (GET_HALF_INT(x) op GET_HALF_INT(y))
 
 SUB_FUNC_IMPL(subFuncAddA_R) {
-    GB_Flag flag;
     uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
     if (!rhs)
         return;
-    // leverage int promotion
-    int const result = (pReg->getRefA()) + (*rhs);
-    flag.Z = (!(result&0xFFU));
+    const int result = pReg->getRefA() + *rhs;
+    GB_Flag flag = {};
+
+    flag.Z = (!GET_LSB(result));
     flag.N = false;
-    flag.H = (pReg->getRefA() & 0xFU) + (*rhs & 0xFU) > 0xFU; // sum of lower bits
-    flag.C = result > 255; // overflow
+    flag.H = (HALF_OP_HELPER(pReg->getRefA(), +, *rhs) >
+             HALF_UPPER_BOUND);
+    flag.C = result > BYTE_UPPER_BOUND;
     pReg->setFlag(flag);
-    pReg->getRefA() = result & 0xFFU;
+    pReg->getRefA() = GET_LSB(result);
 }
 
 SUB_FUNC_IMPL(subFuncAddA_MEMVAL) {
-    GB_Flag flag;
-    uint8_t *rhs = &pInstState->memValue;
-    int const result = (pReg->getRefA()) + (*rhs);
-    flag.Z = (!(result&0xFFU));
+    const int result = pReg->getRefA() + pInstState->memValue;
+    GB_Flag flag = {};
+
+    flag.Z = (!GET_LSB(result));
     flag.N = false;
-    flag.H = (pReg->getRefA() & 0xFU) + (*rhs & 0xFU) > 0xFU; // sum of lower bits
-    flag.C = result > 255; // overflow
+    flag.H = (HALF_OP_HELPER(pReg->getRefA(), +, pInstState->memValue) >
+             HALF_UPPER_BOUND);
+    flag.C = result > BYTE_UPPER_BOUND;
     pReg->setFlag(flag);
-    pReg->getRefA() = result & 0xFFU;
+    pReg->getRefA() = GET_LSB(result);
 }
 
 }
