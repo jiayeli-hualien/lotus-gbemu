@@ -281,13 +281,14 @@ SUB_FUNC_IMPL(subFuncAddA_R) {
     uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
     if (!rhs)
         return;
-    uint8_t const result = (pReg->getRefA()) + (*rhs);
-    flag.Z = (!result);
+    // leverage int promotion
+    int const result = (pReg->getRefA()) + (*rhs);
+    flag.Z = (!(result&0xFFU));
     flag.N = false;
-    flag.H = (pReg->getRefA()&0xFU)+(*rhs&0xFU)>0xFU; // sum of lower bits
-    flag.C = (result < pReg->getRefA()) || (result < *rhs); // overflow
+    flag.H = (pReg->getRefA() & 0xFU) + (*rhs & 0xFU) > 0xFU; // sum of lower bits
+    flag.C = result > 255; // overflow
     pReg->setFlag(flag);
-    pReg->getRefA() = result;
+    pReg->getRefA() = result & 0xFFU;
 }
 
 }
