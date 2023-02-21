@@ -73,6 +73,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncPOP_LD_A16_LSB);
     MAP_ENTRY(subFuncPOP_LD_A16_MSB);
     MAP_ENTRY(subFuncAddA_R);
+    MAP_ENTRY(subFuncAddA_MEMVAL);
 
     return map;
 }
@@ -282,6 +283,18 @@ SUB_FUNC_IMPL(subFuncAddA_R) {
     if (!rhs)
         return;
     // leverage int promotion
+    int const result = (pReg->getRefA()) + (*rhs);
+    flag.Z = (!(result&0xFFU));
+    flag.N = false;
+    flag.H = (pReg->getRefA() & 0xFU) + (*rhs & 0xFU) > 0xFU; // sum of lower bits
+    flag.C = result > 255; // overflow
+    pReg->setFlag(flag);
+    pReg->getRefA() = result & 0xFFU;
+}
+
+SUB_FUNC_IMPL(subFuncAddA_MEMVAL) {
+    GB_Flag flag;
+    uint8_t *rhs = &pInstState->memValue;
     int const result = (pReg->getRefA()) + (*rhs);
     flag.Z = (!(result&0xFFU));
     flag.N = false;
