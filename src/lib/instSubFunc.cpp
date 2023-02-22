@@ -73,6 +73,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncPOP_LD_A16_LSB);
     MAP_ENTRY(subFuncPOP_LD_A16_MSB);
     MAP_ENTRY(subFuncAddA_R);
+    MAP_ENTRY(subFuncAddA_R_Carry);
     MAP_ENTRY(subFuncAddA_MEMVAL);
     MAP_ENTRY(subFuncSubA_R);
     MAP_ENTRY(subFuncSubA_MEMVAL);
@@ -311,6 +312,25 @@ SUB_FUNC_IMPL(subFuncAddA_MEMVAL) {
     flag.Z = (!GET_LSB(result));
     flag.N = false;
     flag.H = (HALF_OP_HELPER(pReg->getRefA(), +, pInstState->memValue) >
+             HALF_UPPER_BOUND);
+    flag.C = result > BYTE_UPPER_BOUND;
+    pReg->setFlag(flag);
+    pReg->getRefA() = GET_LSB(result);
+}
+
+// TODO: refactor?
+SUB_FUNC_IMPL(subFuncAddA_R_Carry) {
+    uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
+    if (!rhs)
+        return;
+    GB_Flag flag = {};
+    pReg->getFlag(flag);
+
+    const int vc = flag.C ? 1 : 0;
+    const int result = pReg->getRefA() + *rhs + vc;
+    flag.Z = (!GET_LSB(result));
+    flag.N = false;
+    flag.H = (HALF_OP_HELPER(pReg->getRefA(), +, *rhs) + vc >
              HALF_UPPER_BOUND);
     flag.C = result > BYTE_UPPER_BOUND;
     pReg->setFlag(flag);
