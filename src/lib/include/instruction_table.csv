@@ -24,5 +24,6 @@ PUSH_RR, 4, subFuncPUSH_LD_A16_RR, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, sub
 POP_RR, 3, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncPOP_LD_R16_MEM16
 ADD_A_R, 1, subFuncAddA_R
 ADD_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL
+ADD_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL
 SUB_A_R, 1, subFuncSubA_R
 SUB_A_HL, 2, subFuncMemReadIndirectHL, subFuncSubA_MEMVAL
