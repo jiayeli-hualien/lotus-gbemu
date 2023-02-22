@@ -75,6 +75,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncAddA_R);
     MAP_ENTRY(subFuncAddA_MEMVAL);
     MAP_ENTRY(subFuncSubA_R);
+    MAP_ENTRY(subFuncSubA_MEMVAL);
 
     return map;
 }
@@ -328,6 +329,19 @@ SUB_FUNC_IMPL(subFuncSubA_R) {
     // TODO: check definition of H and C
     flag.H = GET_HALF_INT(*rhs) > GET_HALF_INT(pReg->getRefA());
     flag.C = *rhs > pReg->getRefA();
+    pReg->setFlag(flag);
+    pReg->getRefA() = GET_LSB(result);
+}
+
+SUB_FUNC_IMPL(subFuncSubA_MEMVAL) {
+    const int result = pReg->getRefA() - pInstState->memValue;
+    GB_Flag flag = {};
+
+    flag.Z = (!GET_LSB(result));
+    flag.N = true;
+    // TODO: check definition of H and C
+    flag.H = GET_HALF_INT(pInstState->memValue) > GET_HALF_INT(pReg->getRefA());
+    flag.C = pInstState->memValue > pReg->getRefA();
     pReg->setFlag(flag);
     pReg->getRefA() = GET_LSB(result);
 }
