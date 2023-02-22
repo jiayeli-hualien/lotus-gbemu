@@ -74,6 +74,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncPOP_LD_A16_MSB);
     MAP_ENTRY(subFuncAddA_R);
     MAP_ENTRY(subFuncAddA_MEMVAL);
+    MAP_ENTRY(subFuncSubA_R);
 
     return map;
 }
@@ -284,7 +285,7 @@ static constexpr int HALF_MASK = 0xF;
 #define GET_HALF_INT(x) (x & HALF_MASK)
 static constexpr int HALF_UPPER_BOUND = 0xF;
 static constexpr int BYTE_UPPER_BOUND = 0xFF;
-#define HALF_OP_HELPER(x, op, y) (GET_HALF_INT(x) op GET_HALF_INT(y))
+#define HALF_OP_HELPER(x, op, y) (GET_HALF_INT((x)) op GET_HALF_INT((y)))
 
 SUB_FUNC_IMPL(subFuncAddA_R) {
     uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
@@ -311,6 +312,22 @@ SUB_FUNC_IMPL(subFuncAddA_MEMVAL) {
     flag.H = (HALF_OP_HELPER(pReg->getRefA(), +, pInstState->memValue) >
              HALF_UPPER_BOUND);
     flag.C = result > BYTE_UPPER_BOUND;
+    pReg->setFlag(flag);
+    pReg->getRefA() = GET_LSB(result);
+}
+
+SUB_FUNC_IMPL(subFuncSubA_R) {
+    uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
+    if (!rhs)
+        return;
+    const int result = pReg->getRefA() - *rhs;
+    GB_Flag flag = {};
+
+    flag.Z = (!GET_LSB(result));
+    flag.N = true;
+    // TODO: check definition of H and C
+    flag.H = GET_HALF_INT(*rhs) > GET_HALF_INT(pReg->getRefA());
+    flag.C = *rhs > pReg->getRefA();
     pReg->setFlag(flag);
     pReg->getRefA() = GET_LSB(result);
 }
