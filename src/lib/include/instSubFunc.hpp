@@ -68,6 +68,7 @@ SUB_FUNC_DECLARE(subFuncAddA_R_Carry);
 SUB_FUNC_DECLARE(subFuncAddA_MEMVAL_Carry)
 SUB_FUNC_DECLARE(subFuncSubA_R);
 SUB_FUNC_DECLARE(subFuncSubA_MEMVAL);
+SUB_FUNC_DECLARE(subFuncSubA_R_Carry);
 
 }
 

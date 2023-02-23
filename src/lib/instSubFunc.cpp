@@ -78,6 +78,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncAddA_MEMVAL_Carry);
     MAP_ENTRY(subFuncSubA_R);
     MAP_ENTRY(subFuncSubA_MEMVAL);
+    MAP_ENTRY(subFuncSubA_R_Carry);
 
     return map;
 }
@@ -364,7 +365,7 @@ SUB_FUNC_IMPL(subFuncSubA_R) {
     flag.N = true;
     // TODO: check definition of H and C
     flag.H = GET_HALF_INT(*rhs) > GET_HALF_INT(pReg->getRefA());
-    flag.C = *rhs > pReg->getRefA();
+    flag.C = result < 0;
     pReg->setFlag(flag);
     pReg->getRefA() = GET_LSB(result);
 }
@@ -378,6 +379,23 @@ SUB_FUNC_IMPL(subFuncSubA_MEMVAL) {
     // TODO: check definition of H and C
     flag.H = GET_HALF_INT(pInstState->memValue) > GET_HALF_INT(pReg->getRefA());
     flag.C = pInstState->memValue > pReg->getRefA();
+    pReg->setFlag(flag);
+    pReg->getRefA() = GET_LSB(result);
+}
+
+SUB_FUNC_IMPL(subFuncSubA_R_Carry) {
+    uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
+    if (!rhs)
+        return;
+    GB_Flag flag = {};
+    pReg->getFlag(flag);
+
+    const int vc = flag.C ? 1 : 0;
+    const int result = pReg->getRefA() - (*rhs + vc);
+    flag.Z = (!GET_LSB(result));
+    flag.N = true;
+    flag.H = GET_HALF_INT(*rhs) + vc > GET_HALF_INT(pReg->getRefA());
+    flag.C = result < 0;
     pReg->setFlag(flag);
     pReg->getRefA() = GET_LSB(result);
 }
