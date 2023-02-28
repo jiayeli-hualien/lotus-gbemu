@@ -79,6 +79,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncSubA_R);
     MAP_ENTRY(subFuncSubA_MEMVAL);
     MAP_ENTRY(subFuncSubA_R_Carry);
+    MAP_ENTRY(subFuncSubA_MEMVAL_Carry);
 
     return map;
 }
@@ -395,6 +396,20 @@ SUB_FUNC_IMPL(subFuncSubA_R_Carry) {
     flag.Z = (!GET_LSB(result));
     flag.N = true;
     flag.H = GET_HALF_INT(*rhs) + vc > GET_HALF_INT(pReg->getRefA());
+    flag.C = result < 0;
+    pReg->setFlag(flag);
+    pReg->getRefA() = GET_LSB(result);
+}
+
+SUB_FUNC_IMPL(subFuncSubA_MEMVAL_Carry) {
+    GB_Flag flag = {};
+    pReg->getFlag(flag);
+
+    const int vc = flag.C ? 1 : 0;
+    const int result = pReg->getRefA() - (pInstState->memValue + vc);
+    flag.Z = (!GET_LSB(result));
+    flag.N = true;
+    flag.H = GET_HALF_INT(pInstState->memValue) + vc > GET_HALF_INT(pReg->getRefA());
     flag.C = result < 0;
     pReg->setFlag(flag);
     pReg->getRefA() = GET_LSB(result);
