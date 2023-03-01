@@ -22,8 +22,10 @@ struct DecodeRule {
 
 static string trim(const string &str) {
     static const string SPACE_CHARS(" \t\n\v\f\r");
-    return str.substr(str.find_first_not_of(SPACE_CHARS),
-                      str.find_last_not_of(SPACE_CHARS)+1);
+    const auto left = str.find_first_not_of(SPACE_CHARS);
+    if (left == std::string::npos)
+        return string();
+    return str.substr(left, str.find_last_not_of(SPACE_CHARS) - left + 1);
 }
 
 static vector<DecodeRule>
