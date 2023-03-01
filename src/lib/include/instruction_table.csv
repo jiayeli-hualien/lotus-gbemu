@@ -32,3 +32,4 @@ SUB_A_HL, 2, subFuncMemReadIndirectHL, subFuncSubA_MEMVAL
 SUB_A_N, 2, subFuncMemReadPC, subFuncSubA_MEMVAL
 SBC_A_R, 1, subFuncSubA_R_Carry
 SBC_A_HL, 2, subFuncMemReadIndirectHL, subFuncSubA_MEMVAL_Carry
+SBC_A_N, 2, subFuncMemReadPC, subFuncSubA_MEMVAL_Carry
