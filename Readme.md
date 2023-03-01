@@ -4,6 +4,8 @@ Wana learn to write an emulator. I chose GameBoy for my first work.
 
 To Nintendo: don't sue me, please hire me.
 
+Warning: This implementation is only a simulator, not an emulator yet. I don't have the precise spec/doc of the CPU pipeline, clock and timing.
+
 LotusGB: named from howntown "花蓮", reverse it "蓮花" -> Lotus.
 
 # Progress
