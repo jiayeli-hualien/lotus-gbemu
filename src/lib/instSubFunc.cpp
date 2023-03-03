@@ -355,64 +355,45 @@ SUB_FUNC_IMPL(subFuncAddA_MEMVAL_Carry) {
     pReg->getRefA() = GET_LSB(result);
 }
 
-SUB_FUNC_IMPL(subFuncSubA_R) {
-    uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
-    if (!rhs)
-        return;
-    const int result = pReg->getRefA() - *rhs;
-    GB_Flag flag = {};
+struct SubArgs {
+    int rhs = 0U;
+    bool useCarry = false;
+    bool updateA = true;
+    SubArgs() {};
+    SubArgs(int iRhs, bool iUseCarry, bool iUpdateA)
+    : rhs(iRhs), useCarry(iUseCarry), updateA(iUpdateA) {};
+};
 
+static inline void _subCommon(const SubArgs &args, SUB_FUNC_PARAMS) {
+    GB_Flag flag = {};
+    pReg->getFlag(flag);
+
+    const int vc = args.useCarry && flag.C ? 1 : 0;
+    const int result = pReg->getRefA() - (args.rhs + vc);
     flag.Z = (!GET_LSB(result));
     flag.N = true;
-    // TODO: check definition of H and C
-    flag.H = GET_HALF_INT(*rhs) > GET_HALF_INT(pReg->getRefA());
+    flag.H = GET_HALF_INT(args.rhs) + vc > GET_HALF_INT(pReg->getRefA());
     flag.C = result < 0;
     pReg->setFlag(flag);
-    pReg->getRefA() = GET_LSB(result);
+    pReg->getRefA() = (args.updateA ? GET_LSB(result) : pReg->getRefA());
+}
+
+SUB_FUNC_IMPL(subFuncSubA_R) {
+    if (uint8_t *rhs = getRegRHS(pInstState->opcode, pReg))
+        _subCommon(SubArgs(*rhs, false, true), SUB_FUNC_ARGS);
 }
 
 SUB_FUNC_IMPL(subFuncSubA_MEMVAL) {
-    const int result = pReg->getRefA() - pInstState->memValue;
-    GB_Flag flag = {};
-
-    flag.Z = (!GET_LSB(result));
-    flag.N = true;
-    // TODO: check definition of H and C
-    flag.H = GET_HALF_INT(pInstState->memValue) > GET_HALF_INT(pReg->getRefA());
-    flag.C = pInstState->memValue > pReg->getRefA();
-    pReg->setFlag(flag);
-    pReg->getRefA() = GET_LSB(result);
+    _subCommon(SubArgs(pInstState->memValue, false, true), SUB_FUNC_ARGS);
 }
 
 SUB_FUNC_IMPL(subFuncSubA_R_Carry) {
-    uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
-    if (!rhs)
-        return;
-    GB_Flag flag = {};
-    pReg->getFlag(flag);
-
-    const int vc = flag.C ? 1 : 0;
-    const int result = pReg->getRefA() - (*rhs + vc);
-    flag.Z = (!GET_LSB(result));
-    flag.N = true;
-    flag.H = GET_HALF_INT(*rhs) + vc > GET_HALF_INT(pReg->getRefA());
-    flag.C = result < 0;
-    pReg->setFlag(flag);
-    pReg->getRefA() = GET_LSB(result);
+    if (uint8_t *rhs = getRegRHS(pInstState->opcode, pReg))
+        _subCommon(SubArgs(*rhs, true, true), SUB_FUNC_ARGS);
 }
 
 SUB_FUNC_IMPL(subFuncSubA_MEMVAL_Carry) {
-    GB_Flag flag = {};
-    pReg->getFlag(flag);
-
-    const int vc = flag.C ? 1 : 0;
-    const int result = pReg->getRefA() - (pInstState->memValue + vc);
-    flag.Z = (!GET_LSB(result));
-    flag.N = true;
-    flag.H = GET_HALF_INT(pInstState->memValue) + vc > GET_HALF_INT(pReg->getRefA());
-    flag.C = result < 0;
-    pReg->setFlag(flag);
-    pReg->getRefA() = GET_LSB(result);
+    _subCommon(SubArgs(pInstState->memValue, true, true), SUB_FUNC_ARGS);
 }
 
 }
