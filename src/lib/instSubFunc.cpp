@@ -80,6 +80,8 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncSubA_MEMVAL);
     MAP_ENTRY(subFuncSubA_R_Carry);
     MAP_ENTRY(subFuncSubA_MEMVAL_Carry);
+    MAP_ENTRY(subFuncCmpA_R);
+    MAP_ENTRY(subFuncCmpA_MEMVAL);
 
     return map;
 }
@@ -394,6 +396,15 @@ SUB_FUNC_IMPL(subFuncSubA_R_Carry) {
 
 SUB_FUNC_IMPL(subFuncSubA_MEMVAL_Carry) {
     _subCommon(SubArgs(pInstState->memValue, true, true), SUB_FUNC_ARGS);
+}
+
+SUB_FUNC_IMPL(subFuncCmpA_R) {
+    if (uint8_t *rhs = getRegRHS(pInstState->opcode, pReg))
+        _subCommon(SubArgs(*rhs, false, false), SUB_FUNC_ARGS);
+}
+
+SUB_FUNC_IMPL(subFuncCmpA_MEMVAL) {
+    _subCommon(SubArgs(pInstState->memValue, false, false), SUB_FUNC_ARGS);
 }
 
 }
