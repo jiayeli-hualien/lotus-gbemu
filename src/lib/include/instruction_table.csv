@@ -27,6 +27,7 @@ ADD_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL
 ADD_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL
 ADC_A_R, 1, subFuncAddA_R_Carry
 ADC_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL_Carry
+ADC_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL_Carry
 SUB_A_R, 1, subFuncSubA_R
 SUB_A_HL, 2, subFuncMemReadIndirectHL, subFuncSubA_MEMVAL
 SUB_A_N, 2, subFuncMemReadPC, subFuncSubA_MEMVAL
