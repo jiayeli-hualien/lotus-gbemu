@@ -72,6 +72,8 @@ SUB_FUNC_DECLARE(subFuncSubA_R_Carry);
 SUB_FUNC_DECLARE(subFuncSubA_MEMVAL_Carry);
 SUB_FUNC_DECLARE(subFuncCmpA_R);
 SUB_FUNC_DECLARE(subFuncCmpA_MEMVAL);
+SUB_FUNC_DECLARE(subFuncIncR);
+SUB_FUNC_DECLARE(subFuncMemIncWriteIndirectHL);
 
 }
 
