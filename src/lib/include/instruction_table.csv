@@ -47,3 +47,6 @@ AND_A_N, 2, subFuncMemReadPC, subFuncAndA_MEMVAL
 OR_A_R, 1, subFuncOrA_R
 OR_A_HL, 2, subFuncMemReadIndirectHL, subFuncOrA_MEMVAL
 OR_A_N, 2, subFuncMemReadPC, subFuncOrA_MEMVAL
+XOR_A_R, 1, subFuncXorA_R
+XOR_A_HL, 2, subFuncMemReadIndirectHL, subFuncXorA_MEMVAL
+XOR_A_N, 2, subFuncMemReadPC, subFuncXorA_MEMVAL

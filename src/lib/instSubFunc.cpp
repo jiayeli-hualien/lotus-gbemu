@@ -90,6 +90,8 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncAndA_MEMVAL);
     MAP_ENTRY(subFuncOrA_R);
     MAP_ENTRY(subFuncOrA_MEMVAL);
+    MAP_ENTRY(subFuncXorA_R);
+    MAP_ENTRY(subFuncXorA_MEMVAL);
 
     return map;
 }
@@ -495,6 +497,24 @@ SUB_FUNC_IMPL(subFuncOrA_R) {
 
 SUB_FUNC_IMPL(subFuncOrA_MEMVAL) {
     _orUint8Common(&pInstState->memValue, SUB_FUNC_ARGS);
+}
+
+static inline void _xorUint8Common(uint8_t *rhs, SUB_FUNC_PARAMS) {
+    pReg->getRefA() = GET_LSB(pReg->getRefA() ^ (*rhs));
+    GB_Flag flag;
+    flag.Z = (!pReg->getRefA());
+    flag.N = false;
+    flag.H = false;
+    flag.C = false;
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncXorA_R) {
+    if (uint8_t *rhs = getRegRHS(pInstState->opcode, pReg))
+        _xorUint8Common(rhs, SUB_FUNC_ARGS);
+}
+SUB_FUNC_IMPL(subFuncXorA_MEMVAL){
+    _xorUint8Common(&pInstState->memValue, SUB_FUNC_ARGS);
 }
 
 }
