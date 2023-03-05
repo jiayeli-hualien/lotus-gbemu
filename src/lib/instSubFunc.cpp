@@ -99,6 +99,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncLD_PC_MEM16);
     MAP_ENTRY(subFuncLD_PC_HL);
     MAP_ENTRY(subFuncCondLD_PC_MEM16);
+    MAP_ENTRY(subFuncJR);
 
     return map;
 }
@@ -609,6 +610,11 @@ SUB_FUNC_IMPL(subFuncCondLD_PC_MEM16) {
         pReg->getRefPC() = pInstState->a16Addr;
         pInstState->memMode = MEM_MODE_SLEEP;
     }
+}
+
+SUB_FUNC_IMPL(subFuncJR) {
+    pReg->getRefPC() += (int8_t)(pInstState->memValue);
+    pInstState->memMode = MEM_MODE_SLEEP;
 }
 
 }
