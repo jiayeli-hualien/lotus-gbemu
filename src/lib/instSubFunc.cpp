@@ -102,7 +102,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncJR);
     MAP_ENTRY(subFuncCondJR);
     MAP_ENTRY(subFuncSwapPC_MEM16);
-
+    MAP_ENTRY(subFuncCondSwapPC_MEM16);
 
     return map;
 }
@@ -632,6 +632,15 @@ SUB_FUNC_IMPL(subFuncCondJR) {
 SUB_FUNC_IMPL(subFuncSwapPC_MEM16) {
     std::swap(pReg->getRefPC(),pInstState->a16Addr);
     pInstState->memMode = MEM_MODE_SLEEP;
+}
+
+SUB_FUNC_IMPL(subFuncCondSwapPC_MEM16) {
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    if (_jpConditionTrue(pInstState->opcode, flag)) {
+        std::swap(pReg->getRefPC(), pInstState->a16Addr);
+        pInstState->memMode = MEM_MODE_SLEEP;
+    }
 }
 
 }
