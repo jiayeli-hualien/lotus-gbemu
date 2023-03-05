@@ -94,6 +94,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncXorA_MEMVAL);
     MAP_ENTRY(subFuncCCF);
     MAP_ENTRY(subFuncSCF);
+    MAP_ENTRY(subFuncDAA);
 
     return map;
 }
@@ -534,6 +535,36 @@ SUB_FUNC_IMPL(subFuncSCF) {
     flag.N = false;
     flag.H = false;
     flag.C = true;
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncDAA) {
+    // https://forums.nesdev.org/viewtopic.php?t=15944
+    // If you want to do BCD arithmatic,
+    // Call DAA after any ADD/SUB about Reg A
+    static const int BCD_MAX = 0x99;
+    static const int BCD_MAX_HALF = 0x9;
+
+    // TODO: understand fast carry
+    static const int FAST_CARRY = 0x60; // Do adujst without %10 and shift
+    static const int FAST_CARRY_HALF = 0x06;
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    if (flag.N) { // after sub
+        if (flag.C)
+            pReg->getRefA() = GET_LSB(pReg->getRefA() - FAST_CARRY);
+        if (flag.H)
+            pReg->getRefA() = GET_LSB(pReg->getRefA() - FAST_CARRY_HALF);
+    } else { // after add
+        if (flag.C || pReg->getRefA() > BCD_MAX) {
+            flag.C = true;
+            pReg->getRefA() = GET_LSB(pReg->getRefA() + FAST_CARRY);
+        }
+        if (flag.H || GET_HALF_INT(pReg->getRefA()) > BCD_MAX_HALF)
+            pReg->getRefA() = GET_LSB(pReg->getRefA() + FAST_CARRY_HALF);
+    }
+    flag.Z = !pReg->getRefA();
+    flag.H = false;
     pReg->setFlag(flag);
 }
 

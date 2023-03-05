@@ -52,3 +52,4 @@ XOR_A_HL, 2, subFuncMemReadIndirectHL, subFuncXorA_MEMVAL
 XOR_A_N, 2, subFuncMemReadPC, subFuncXorA_MEMVAL
 CCF, 1, subFuncCCF
 SCF, 1, subFuncSCF
+DAA, 1, subFuncDAA
