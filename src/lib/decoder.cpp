@@ -145,7 +145,7 @@ Decoder::Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet) {
         const int N = (int) rules.size();
         for (int r=0; r < N; r++) {
             const DecodeRule &rule = rules[r];
-            if ((opcode&rule.mask) == rule.matchValue) {
+            if ((opcode&rule.mask) == (rule.matchValue&rule.mask)) {
                 lutInstIdx[opcode] = instIdx[rule.instName];
                 break;
             }
