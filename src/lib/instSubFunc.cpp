@@ -95,6 +95,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncCCF);
     MAP_ENTRY(subFuncSCF);
     MAP_ENTRY(subFuncDAA);
+    MAP_ENTRY(subFuncCPL);
 
     return map;
 }
@@ -566,6 +567,15 @@ SUB_FUNC_IMPL(subFuncDAA) {
     flag.Z = !pReg->getRefA();
     flag.H = false;
     pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncCPL) {
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    flag.N = true;
+    flag.H = true;
+    pReg->setFlag(flag);
+    pReg->getRefA() = ~pReg->getRefA();
 }
 
 }
