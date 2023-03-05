@@ -64,3 +64,5 @@ CALL_CC_NN, 6, subFuncReadA16LSB, subFuncReadA16MSB, subFuncCondSwapPC_MEM16, su
 RET, 4, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncLD_PC_MEM16, subFuncNOP
 RET_CC, 5, subFuncBubble, subFuncCondPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncLD_PC_MEM16, subFuncNOP
 RETI, 4, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncLD_PC_MEM16_RETI, subFuncNOP
+RST, 4, subFuncLD_MEM16_PC, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncRST
+HALT, 1, subFuncHalt

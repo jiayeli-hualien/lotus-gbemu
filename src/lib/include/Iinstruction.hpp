@@ -23,6 +23,11 @@ enum IME_ACTION {
     IME_ACTION_DISABLE,
 };
 
+enum CLOCK_ACTION {
+    CLOCK_ACTION_NONE = 0,
+    CLOCK_ACTION_HALT,
+};
+
 static constexpr size_t MAX_INST_LEN = 4; // in bytes, acutaly 3 but align 4
 struct InstState {
     uint8_t opcode = 0;
@@ -31,7 +36,7 @@ struct InstState {
     MEM_MODE memMode = MEM_MODE_NONE;
     uint8_t memValue = 0; // value read from memory or will to write to memory
     uint16_t memAddr = 0;
-    // TODO: find better place for a16addr
+    // TODO: find better place for a16addr, rename to a16
     uint16_t a16Addr = 0;
 
     // TODO: system clock / interrupt handler
@@ -41,6 +46,7 @@ struct InstState {
     bool nextIMEValue = false;
 
     IME_ACTION imeAction = IME_ACTION_NONE;
+    CLOCK_ACTION clockAction = CLOCK_ACTION_NONE;
 };
 
 InstState* createInitState();

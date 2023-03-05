@@ -94,9 +94,13 @@ SUB_FUNC_DECLARE(subFuncCondJR);
 SUB_FUNC_DECLARE(subFuncSwapPC_MEM16);
 SUB_FUNC_DECLARE(subFuncCondSwapPC_MEM16);
 // TODO: why GB need idle at this mem clock?
+// TODO: let SP value correct in every clock.
 SUB_FUNC_DECLARE(subFuncBubble);
 SUB_FUNC_DECLARE(subFuncCondPOP_LD_A16_LSB);
 SUB_FUNC_DECLARE(subFuncLD_PC_MEM16_RETI);
+SUB_FUNC_DECLARE(subFuncLD_MEM16_PC);
+SUB_FUNC_DECLARE(subFuncRST);
+SUB_FUNC_DECLARE(subFuncHalt);
 
 }
 
