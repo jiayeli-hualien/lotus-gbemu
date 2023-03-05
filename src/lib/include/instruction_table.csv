@@ -44,3 +44,6 @@ DEC_R, 1, subFuncDecR
 AND_A_R, 1, subFuncAndA_R
 AND_A_HL, 2, subFuncMemReadIndirectHL, subFuncAndA_MEMVAL
 AND_A_N, 2, subFuncMemReadPC, subFuncAndA_MEMVAL
+OR_A_R, 1, subFuncOrA_R
+OR_A_HL, 2, subFuncMemReadIndirectHL, subFuncOrA_MEMVAL
+OR_A_N, 2, subFuncMemReadPC, subFuncOrA_MEMVAL
