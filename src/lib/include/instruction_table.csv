@@ -54,3 +54,4 @@ CCF, 1, subFuncCCF
 SCF, 1, subFuncSCF
 DAA, 1, subFuncDAA
 CPL, 1, subFuncCPL
+JP_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncLD_PC_MEM16, subFuncNOP
