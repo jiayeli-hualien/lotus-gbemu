@@ -84,6 +84,8 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncCmpA_MEMVAL);
     MAP_ENTRY(subFuncIncR);
     MAP_ENTRY(subFuncMemIncWriteIndirectHL);
+    MAP_ENTRY(subFuncDecR);
+    MAP_ENTRY(subFuncMemDecWriteIndirectHL);
 
     return map;
 }
@@ -426,6 +428,27 @@ SUB_FUNC_IMPL(subFuncIncR) {
 
 SUB_FUNC_IMPL(subFuncMemIncWriteIndirectHL) {
     _incUint8Common(&pInstState->memValue, SUB_FUNC_ARGS);
+    pInstState->memMode = MEM_MODE_WRITE;
+    pInstState->memAddr = pReg->getRefHL();
+}
+
+static inline void _decUint8Common(uint8_t *lhs, SUB_FUNC_PARAMS) {
+    GB_Flag flag = {};
+    pReg->getFlag(flag);
+    const uint8_t tmp = (*lhs)--;
+    flag.Z = (!(*lhs));
+    flag.N = true;
+    flag.H = (!GET_HALF_INT(tmp)); // lower 4bit < 1
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncDecR) {
+    if (uint8_t *lhs = getRegLHS(pInstState->opcode, pReg))
+        _decUint8Common(lhs, SUB_FUNC_ARGS);
+}
+
+SUB_FUNC_IMPL(subFuncMemDecWriteIndirectHL) {
+    _decUint8Common(&pInstState->memValue, SUB_FUNC_ARGS);
     pInstState->memMode = MEM_MODE_WRITE;
     pInstState->memAddr = pReg->getRefHL();
 }
