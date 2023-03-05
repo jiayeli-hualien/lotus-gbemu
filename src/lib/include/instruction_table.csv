@@ -56,3 +56,4 @@ DAA, 1, subFuncDAA
 CPL, 1, subFuncCPL
 JP_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncLD_PC_MEM16, subFuncNOP
 JP_HL, 1, subFuncLD_PC_HL
+JP_CC_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncCondLD_PC_MEM16, subFuncNOP

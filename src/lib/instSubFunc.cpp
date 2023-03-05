@@ -98,6 +98,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncCPL);
     MAP_ENTRY(subFuncLD_PC_MEM16);
     MAP_ENTRY(subFuncLD_PC_HL);
+    MAP_ENTRY(subFuncCondLD_PC_MEM16);
 
     return map;
 }
@@ -588,6 +589,26 @@ SUB_FUNC_IMPL(subFuncLD_PC_MEM16) {
 SUB_FUNC_IMPL(subFuncLD_PC_HL) {
     // TODO: handle timing if execute/fetch are parallel
     pReg->getRefPC() = pReg->getRefHL();
+}
+
+static inline bool _jpConditionTrue(const uint8_t &op, const GB_Flag &flag) {
+    switch((op>>3)&3) {
+        case 0: return !flag.Z;
+        case 1: return flag.Z;
+        case 2: return !flag.C;
+        case 3:
+        default:
+            return flag.C;
+    }
+}
+
+SUB_FUNC_IMPL(subFuncCondLD_PC_MEM16) {
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    if (_jpConditionTrue(pInstState->opcode, flag)) {
+        pReg->getRefPC() = pInstState->a16Addr;
+        pInstState->memMode = MEM_MODE_SLEEP;
+    }
 }
 
 }
