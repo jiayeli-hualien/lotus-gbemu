@@ -93,6 +93,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncXorA_R);
     MAP_ENTRY(subFuncXorA_MEMVAL);
     MAP_ENTRY(subFuncCCF);
+    MAP_ENTRY(subFuncSCF);
 
     return map;
 }
@@ -524,6 +525,15 @@ SUB_FUNC_IMPL(subFuncCCF) {
     flag.N = false;
     flag.H = false;
     flag.C = !flag.C;
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncSCF) {
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    flag.N = false;
+    flag.H = false;
+    flag.C = true;
     pReg->setFlag(flag);
 }
 
