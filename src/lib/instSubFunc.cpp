@@ -97,6 +97,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncDAA);
     MAP_ENTRY(subFuncCPL);
     MAP_ENTRY(subFuncLD_PC_MEM16);
+    MAP_ENTRY(subFuncLD_PC_HL);
 
     return map;
 }
@@ -582,6 +583,11 @@ SUB_FUNC_IMPL(subFuncCPL) {
 SUB_FUNC_IMPL(subFuncLD_PC_MEM16) {
     pReg->getRefPC() = pInstState->a16Addr;
     pInstState->memMode = MEM_MODE_SLEEP;
+}
+
+SUB_FUNC_IMPL(subFuncLD_PC_HL) {
+    // TODO: handle timing if execute/fetch are parallel
+    pReg->getRefPC() = pReg->getRefHL();
 }
 
 }

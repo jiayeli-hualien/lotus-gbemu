@@ -9,6 +9,7 @@ namespace LOTUSGB {
 static const uint16_t HIGH_MEM_ADDR = 0xFF00;
 enum MEM_MODE {
     MEM_MODE_NONE = 0,
+    MEM_MODE_FETCH = MEM_MODE_NONE, // CPU do fetch if we don't specify mode
     MEM_MODE_READ,
     MEM_MODE_WRITE,
     MEM_MODE_READ_ADDR_LSB, // TODO: let instruction access memory?
