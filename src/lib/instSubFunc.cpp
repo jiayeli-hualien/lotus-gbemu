@@ -109,6 +109,8 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncLD_MEM16_PC);
     MAP_ENTRY(subFuncRST);
     MAP_ENTRY(subFuncHalt);
+    MAP_ENTRY(subFuncStop);
+    MAP_ENTRY(subFuncStopWorkaround);
 
     return map;
 }
@@ -683,6 +685,21 @@ SUB_FUNC_IMPL(subFuncRST) {
 
 SUB_FUNC_IMPL(subFuncHalt) {
     pInstState->clockAction = CLOCK_ACTION_HALT;
+}
+
+SUB_FUNC_IMPL(subFuncStopWorkaround) {
+    // TODO: stop the CPU
+    // workaround for gbit only fetch first byte of op STOP
+    pInstState->clockAction = CLOCK_ACTION_HALT;
+}
+
+SUB_FUNC_IMPL(subFuncStop) {
+    // TODO: stop the CPU
+    if (pInstState->memValue) {
+        std::cerr << "invalid stop instrcution" << std::endl;
+    } else {
+        pInstState->clockAction = CLOCK_ACTION_HALT;
+    }
 }
 
 }
