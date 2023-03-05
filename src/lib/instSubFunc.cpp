@@ -105,6 +105,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncCondSwapPC_MEM16);
     MAP_ENTRY(subFuncBubble);
     MAP_ENTRY(subFuncCondPOP_LD_A16_LSB);
+    MAP_ENTRY(subFuncLD_PC_MEM16_RETI);
 
     return map;
 }
@@ -656,6 +657,12 @@ SUB_FUNC_IMPL(subFuncCondPOP_LD_A16_LSB) {
         pInstState->memMode = MEM_MODE_READ_ADDR_LSB;
         pInstState->memAddr = pReg->getRefSP()++;
     }
+}
+
+SUB_FUNC_IMPL(subFuncLD_PC_MEM16_RETI) {
+    pReg->getRefPC() = pInstState->a16Addr;
+    pInstState->memMode = MEM_MODE_SLEEP;
+    pInstState->imeAction = IME_ACTION_ENALBE;
 }
 
 }

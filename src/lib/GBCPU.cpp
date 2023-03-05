@@ -57,8 +57,18 @@ bool GBCPU::stepOneCycle() {
         return false;
     }
     instStat.memMode = MEM_MODE_NONE;
+    instStat.imeAction = IME_ACTION_NONE;
     if (!pInst->stepOneMemCycle(&instStat, &reg)) {
         std::cerr << "instruction failed" << std::endl;
+    }
+    switch (instStat.imeAction) { // TODO: let instruction fully control IME?
+        case IME_ACTION_ENALBE:
+            setIME(true); break;
+        case IME_ACTION_DISABLE:
+            setIME(false); break;
+        case IME_ACTION_NONE:
+        default:
+            break;
     }
     switch (instStat.memMode) {
         case MEM_MODE_NONE: doFetchNextOp(); break;

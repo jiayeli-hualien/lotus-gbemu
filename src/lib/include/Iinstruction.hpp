@@ -17,6 +17,12 @@ enum MEM_MODE {
     MEM_MODE_SLEEP,
 };
 
+enum IME_ACTION {
+    IME_ACTION_NONE = 0,
+    IME_ACTION_ENALBE,
+    IME_ACTION_DISABLE,
+};
+
 static constexpr size_t MAX_INST_LEN = 4; // in bytes, acutaly 3 but align 4
 struct InstState {
     uint8_t opcode = 0;
@@ -33,6 +39,8 @@ struct InstState {
     bool nextHaltValue = false;
     bool setIME = false;
     bool nextIMEValue = false;
+
+    IME_ACTION imeAction = IME_ACTION_NONE;
 };
 
 InstState* createInitState();
