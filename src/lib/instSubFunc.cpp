@@ -103,6 +103,8 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncCondJR);
     MAP_ENTRY(subFuncSwapPC_MEM16);
     MAP_ENTRY(subFuncCondSwapPC_MEM16);
+    MAP_ENTRY(subFuncBubble);
+    MAP_ENTRY(subFuncCondPOP_LD_A16_LSB);
 
     return map;
 }
@@ -640,6 +642,19 @@ SUB_FUNC_IMPL(subFuncCondSwapPC_MEM16) {
     if (_jpConditionTrue(pInstState->opcode, flag)) {
         std::swap(pReg->getRefPC(), pInstState->a16Addr);
         pInstState->memMode = MEM_MODE_SLEEP;
+    }
+}
+
+SUB_FUNC_IMPL(subFuncBubble) {
+    pInstState->memMode = MEM_MODE_SLEEP;
+}
+
+SUB_FUNC_IMPL(subFuncCondPOP_LD_A16_LSB) {
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    if (_jpConditionTrue(pInstState->opcode, flag)) {
+        pInstState->memMode = MEM_MODE_READ_ADDR_LSB;
+        pInstState->memAddr = pReg->getRefSP()++;
     }
 }
 
