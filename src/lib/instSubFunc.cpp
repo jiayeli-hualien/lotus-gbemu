@@ -111,6 +111,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncHalt);
     MAP_ENTRY(subFuncStop);
     MAP_ENTRY(subFuncStopWorkaround);
+    MAP_ENTRY(subFuncDI);
 
     return map;
 }
@@ -700,6 +701,10 @@ SUB_FUNC_IMPL(subFuncStop) {
     } else {
         pInstState->clockAction = CLOCK_ACTION_HALT;
     }
+}
+
+SUB_FUNC_IMPL(subFuncDI) {
+    pInstState->imeAction = IME_ACTION_DISABLE;
 }
 
 }

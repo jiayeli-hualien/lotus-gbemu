@@ -103,6 +103,7 @@ SUB_FUNC_DECLARE(subFuncRST);
 SUB_FUNC_DECLARE(subFuncHalt);
 SUB_FUNC_DECLARE(subFuncStop);
 SUB_FUNC_DECLARE(subFuncStopWorkaround);
+SUB_FUNC_DECLARE(subFuncDI);
 
 }
 

@@ -68,3 +68,4 @@ RST, 4, subFuncLD_MEM16_PC, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncRST
 HALT, 1, subFuncHalt
 STOP_Workaround, 1, subFuncStopWorkaround
 STOP, 2, subFuncMemReadPC, subFuncStop
+DI, 1, subFuncDI
