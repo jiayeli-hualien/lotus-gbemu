@@ -63,7 +63,7 @@ bool GBCPU::stepOneCycle() {
         std::cerr << "instruction failed" << std::endl;
     }
     switch (instStat.imeAction) { // TODO: let instruction fully control IME?
-        case IME_ACTION_ENALBE:
+        case IME_ACTION_ENABLE:
             setIME(true); break;
         case IME_ACTION_DISABLE:
             setIME(false); break;

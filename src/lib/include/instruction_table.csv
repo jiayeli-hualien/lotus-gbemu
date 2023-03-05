@@ -69,3 +69,4 @@ HALT, 1, subFuncHalt
 STOP_Workaround, 1, subFuncStopWorkaround
 STOP, 2, subFuncMemReadPC, subFuncStop
 DI, 1, subFuncDI
+EI, 1, subFuncEI
