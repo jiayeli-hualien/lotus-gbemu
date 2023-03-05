@@ -86,6 +86,8 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncMemIncWriteIndirectHL);
     MAP_ENTRY(subFuncDecR);
     MAP_ENTRY(subFuncMemDecWriteIndirectHL);
+    MAP_ENTRY(subFuncAndA_R);
+    MAP_ENTRY(subFuncAndA_MEMVAL);
 
     return map;
 }
@@ -291,9 +293,9 @@ SUB_FUNC_IMPL(subFuncPOP_LD_A16_MSB) {
 // int for leverage int promotion
 static constexpr int BYTE_MASK = 0xFF;
 static constexpr int HALF_MASK = 0xF;
-#define GET_LSB(x) ((uint8_t)(x & BYTE_MASK))
-#define GET_LSB_INT(x) (x & BYTE_MASK)
-#define GET_HALF_INT(x) (x & HALF_MASK)
+#define GET_LSB(x) ((uint8_t)((x) & BYTE_MASK))
+#define GET_LSB_INT(x) ((x) & BYTE_MASK)
+#define GET_HALF_INT(x) ((x) & HALF_MASK)
 static constexpr int HALF_UPPER_BOUND = 0xF;
 static constexpr int BYTE_UPPER_BOUND = 0xFF;
 #define HALF_OP_HELPER(x, op, y) (GET_HALF_INT((x)) op GET_HALF_INT((y)))
@@ -451,6 +453,26 @@ SUB_FUNC_IMPL(subFuncMemDecWriteIndirectHL) {
     _decUint8Common(&pInstState->memValue, SUB_FUNC_ARGS);
     pInstState->memMode = MEM_MODE_WRITE;
     pInstState->memAddr = pReg->getRefHL();
+}
+
+
+static inline void _andUint8Common(uint8_t *rhs, SUB_FUNC_PARAMS) {
+    pReg->getRefA() = GET_LSB(pReg->getRefA() & (*rhs));
+    GB_Flag flag;
+    flag.Z = (!pReg->getRefA());
+    flag.N = false;
+    flag.H = true;
+    flag.C = false;
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncAndA_R) {
+    if (uint8_t *rhs = getRegRHS(pInstState->opcode, pReg))
+        _andUint8Common(rhs, SUB_FUNC_ARGS);
+}
+
+SUB_FUNC_IMPL(subFuncAndA_MEMVAL) {
+    _andUint8Common(&pInstState->memValue, SUB_FUNC_ARGS);
 }
 
 }

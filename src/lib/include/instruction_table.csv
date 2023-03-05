@@ -41,3 +41,6 @@ INC_HL, 3, subFuncMemReadIndirectHL, subFuncMemIncWriteIndirectHL, subFuncNOP
 INC_R, 1, subFuncIncR
 DEC_HL, 3, subFuncMemReadIndirectHL, subFuncMemDecWriteIndirectHL, subFuncNOP
 DEC_R, 1, subFuncDecR
+AND_A_R, 1, subFuncAndA_R
+AND_A_HL, 2, subFuncMemReadIndirectHL, subFuncAndA_MEMVAL
+AND_A_N, 2, subFuncMemReadPC, subFuncAndA_MEMVAL
