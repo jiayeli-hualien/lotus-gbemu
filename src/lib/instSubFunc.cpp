@@ -113,6 +113,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncStopWorkaround);
     MAP_ENTRY(subFuncDI);
     MAP_ENTRY(subFuncEI);
+    MAP_ENTRY(subFuncIncRR);
 
     return map;
 }
@@ -710,6 +711,12 @@ SUB_FUNC_IMPL(subFuncDI) {
 
 SUB_FUNC_IMPL(subFuncEI) {
     pInstState->imeAction = IME_ACTION_ENABLE;
+}
+
+SUB_FUNC_IMPL(subFuncIncRR) {
+    // TODO: emu 8 bit cpu
+    ++_getCommonReg16(pInstState->opcode, pReg);
+    pInstState->memMode = MEM_MODE_SLEEP;
 }
 
 }

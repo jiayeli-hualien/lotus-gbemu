@@ -105,6 +105,8 @@ SUB_FUNC_DECLARE(subFuncStop);
 SUB_FUNC_DECLARE(subFuncStopWorkaround);
 SUB_FUNC_DECLARE(subFuncDI);
 SUB_FUNC_DECLARE(subFuncEI);
+// TODO: get correct pipeline spec of 16bit inst
+SUB_FUNC_DECLARE(subFuncIncRR);
 
 }
 
