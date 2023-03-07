@@ -117,6 +117,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncDecRR);
     MAP_ENTRY(subFuncAdd_HL_RR);
     MAP_ENTRY(subFuncAdd_SP_R8);
+    MAP_ENTRY(subFuncAdd_HL_SP_R8);
 
     return map;
 }
@@ -740,20 +741,34 @@ SUB_FUNC_IMPL(subFuncAdd_HL_RR) {
     pReg->setFlag(flag);
 }
 
-SUB_FUNC_IMPL(subFuncAdd_SP_R8) {
-    // TODO: get correct pipeline timing
-    const int lhs = pReg->getRefSP();
-    const int rhs = (int)((int8_t)(pInstState->memValue));
+static inline int _add_SP_R8(const int lhs, const int rhs, GB_Flag &flag) {
     const int result = lhs + rhs;
-    GB_Flag flag;
-    pReg->getFlag(flag);
     flag.Z = false;
     flag.N = false;
     // TODO: is H or C correct?
     flag.H = (HALF_OP_HELPER(lhs, +, rhs) >
               HALF_UPPER_BOUND);
     flag.C = GET_LSB_INT(lhs) + GET_LSB_INT(rhs) > 0xFF;
+    return result;
+}
+
+SUB_FUNC_IMPL(subFuncAdd_SP_R8) {
+    // TODO: get correct pipeline timing
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    const int result = _add_SP_R8(pReg->getRefSP(),
+                                  (int)((int8_t)(pInstState->memValue)), flag);
     pReg->getRefSP() = (uint16_t)(result & 0xFFFF);
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncAdd_HL_SP_R8) {
+    // TODO: get correct pipeline timing
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    const int result = _add_SP_R8(pReg->getRefSP(),
+                                  (int)((int8_t)(pInstState->memValue)), flag);
+    pReg->getRefHL() = (uint16_t)(result & 0xFFFF);
     pReg->setFlag(flag);
 }
 
