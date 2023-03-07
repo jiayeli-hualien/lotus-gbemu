@@ -116,6 +116,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncIncRR);
     MAP_ENTRY(subFuncDecRR);
     MAP_ENTRY(subFuncAdd_HL_RR);
+    MAP_ENTRY(subFuncAdd_SP_R8);
 
     return map;
 }
@@ -736,6 +737,23 @@ SUB_FUNC_IMPL(subFuncAdd_HL_RR) {
     flag.C = result > 0xFFFF;
     flag.H = (lhs&0xFFF) + (rhs&0xFFF) > 0xFFF;
     pReg->getRefHL() = (uint16_t)(result & 0xFFFF);
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncAdd_SP_R8) {
+    // TODO: get correct pipeline timing
+    const int lhs = pReg->getRefSP();
+    const int rhs = (int)((int8_t)(pInstState->memValue));
+    const int result = lhs + rhs;
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    flag.Z = false;
+    flag.N = false;
+    // TODO: is H or C correct?
+    flag.H = (HALF_OP_HELPER(lhs, +, rhs) >
+              HALF_UPPER_BOUND);
+    flag.C = GET_LSB_INT(lhs) + GET_LSB_INT(rhs) > 0xFF;
+    pReg->getRefSP() = (uint16_t)(result & 0xFFFF);
     pReg->setFlag(flag);
 }
 

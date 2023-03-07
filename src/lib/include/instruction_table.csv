@@ -29,6 +29,7 @@ ADD_HL_RR, 2, subFuncBubble, subFuncAdd_HL_RR
 ADC_A_R, 1, subFuncAddA_R_Carry
 ADC_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL_Carry
 ADC_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL_Carry
+ADD_SP_R8, 4, subFuncMemReadPC, subFuncBubble, subFuncBubble, subFuncAdd_SP_R8
 SUB_A_R, 1, subFuncSubA_R
 SUB_A_HL, 2, subFuncMemReadIndirectHL, subFuncSubA_MEMVAL
 SUB_A_N, 2, subFuncMemReadPC, subFuncSubA_MEMVAL
