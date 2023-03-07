@@ -118,6 +118,10 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncAdd_HL_RR);
     MAP_ENTRY(subFuncAdd_SP_R8);
     MAP_ENTRY(subFuncAdd_HL_SP_R8);
+    MAP_ENTRY(subFuncRLCA);
+    MAP_ENTRY(subFuncRLA);
+    MAP_ENTRY(subFuncRRCA);
+    MAP_ENTRY(subFuncRRA);
 
     return map;
 }
@@ -769,6 +773,60 @@ SUB_FUNC_IMPL(subFuncAdd_HL_SP_R8) {
     const int result = _add_SP_R8(pReg->getRefSP(),
                                   (int)((int8_t)(pInstState->memValue)), flag);
     pReg->getRefHL() = (uint16_t)(result & 0xFFFF);
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncRLCA) {
+    auto &A = pReg->getRefA();
+    int result = A;
+    GB_Flag flag = {};
+    flag.C = (1<<7)&result;
+    result = (result << 1) | (flag.C ? 1 : 0);
+    pReg->getRefA() = GET_LSB(result);
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncRLA) {
+    auto &A = pReg->getRefA();
+    int result = A;
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    result = (result << 1) | (flag.C ? 1 : 0);
+    flag.C = (1<<8)&result;
+    flag.Z = false;
+    flag.N = false;
+    flag.H = false;
+    pReg->getRefA() = GET_LSB(result);
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncRRCA) {
+    auto &A = pReg->getRefA();
+    int result = A;
+    GB_Flag flag = {};
+    pReg->getFlag(flag);
+    flag.C = (1)&result;
+    result = (result) | (flag.C ? 1<<8 : 0);
+    result >>= 1;
+    flag.N = false;
+    flag.Z = false;
+    flag.H = false;
+    pReg->getRefA() = GET_LSB(result);
+    pReg->setFlag(flag);
+}
+
+SUB_FUNC_IMPL(subFuncRRA) {
+    auto &A = pReg->getRefA();
+    int result = A;
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    result = (result) | (flag.C ? 1<<8 : 0);
+    flag.C = (1)&result;
+    result >>= 1;
+    flag.Z = false;
+    flag.N = false;
+    flag.H = false;
+    pReg->getRefA() = GET_LSB(result);
     pReg->setFlag(flag);
 }
 
