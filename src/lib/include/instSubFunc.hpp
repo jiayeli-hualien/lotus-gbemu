@@ -106,7 +106,9 @@ SUB_FUNC_DECLARE(subFuncStopWorkaround);
 SUB_FUNC_DECLARE(subFuncDI);
 SUB_FUNC_DECLARE(subFuncEI);
 // TODO: get correct pipeline spec of 16bit inst
+// TODO: implment all add & sub only by 8bit adder?
 SUB_FUNC_DECLARE(subFuncIncRR);
+SUB_FUNC_DECLARE(subFuncDecRR);
 
 }
 
