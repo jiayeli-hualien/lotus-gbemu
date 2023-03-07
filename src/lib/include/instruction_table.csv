@@ -25,7 +25,7 @@ POP_RR, 3, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncPOP_LD_R16_MEM16
 ADD_A_R, 1, subFuncAddA_R
 ADD_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL
 ADD_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL
-ADD_HL_RR, 2, subFuncAdd_HL_RR, subFuncNOP
+ADD_HL_RR, 2, subFuncBubble, subFuncAdd_HL_RR
 ADC_A_R, 1, subFuncAddA_R_Carry
 ADC_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL_Carry
 ADC_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL_Carry
@@ -40,10 +40,10 @@ CP_A_HL, 2, subFuncMemReadIndirectHL, subFuncCmpA_MEMVAL
 CP_A_N, 2, subFuncMemReadPC, subFuncCmpA_MEMVAL
 INC_HL, 3, subFuncMemReadIndirectHL, subFuncMemIncWriteIndirectHL, subFuncNOP
 INC_R, 1, subFuncIncR
-INC_RR, 2, subFuncIncRR, subFuncNOP
+INC_RR, 2, subFuncBubble, subFuncIncRR
 DEC_HL, 3, subFuncMemReadIndirectHL, subFuncMemDecWriteIndirectHL, subFuncNOP
 DEC_R, 1, subFuncDecR
-DEC_RR, 2, subFuncDecRR, subFuncNOP
+DEC_RR, 2, subFuncBubble, subFuncDecRR
 AND_A_R, 1, subFuncAndA_R
 AND_A_HL, 2, subFuncMemReadIndirectHL, subFuncAndA_MEMVAL
 AND_A_N, 2, subFuncMemReadPC, subFuncAndA_MEMVAL

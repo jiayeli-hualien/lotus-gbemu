@@ -718,13 +718,11 @@ SUB_FUNC_IMPL(subFuncEI) {
 SUB_FUNC_IMPL(subFuncIncRR) {
     // TODO: emu 8 bit cpu
     ++_getCommonReg16(pInstState->opcode, pReg);
-    pInstState->memMode = MEM_MODE_SLEEP;
 }
 
 SUB_FUNC_IMPL(subFuncDecRR) {
     // TODO: emu 8 bit cpu
     --_getCommonReg16(pInstState->opcode, pReg);
-    pInstState->memMode = MEM_MODE_SLEEP;
 }
 
 SUB_FUNC_IMPL(subFuncAdd_HL_RR) {
@@ -739,7 +737,6 @@ SUB_FUNC_IMPL(subFuncAdd_HL_RR) {
     flag.H = (lhs&0xFFF) + (rhs&0xFFF) > 0xFFF;
     pReg->getRefHL() = (uint16_t)(result & 0xFFFF);
     pReg->setFlag(flag);
-    pInstState->memMode = MEM_MODE_SLEEP;
 }
 
 }
