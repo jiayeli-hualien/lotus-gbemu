@@ -109,6 +109,7 @@ SUB_FUNC_DECLARE(subFuncEI);
 // TODO: implment all add & sub only by 8bit adder?
 SUB_FUNC_DECLARE(subFuncIncRR);
 SUB_FUNC_DECLARE(subFuncDecRR);
+SUB_FUNC_DECLARE(subFuncAdd_HL_RR);
 
 }
 

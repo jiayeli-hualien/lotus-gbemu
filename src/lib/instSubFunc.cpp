@@ -115,6 +115,7 @@ subFunMapType getSubFuncMap() {
     MAP_ENTRY(subFuncEI);
     MAP_ENTRY(subFuncIncRR);
     MAP_ENTRY(subFuncDecRR);
+    MAP_ENTRY(subFuncAdd_HL_RR);
 
     return map;
 }
@@ -723,6 +724,21 @@ SUB_FUNC_IMPL(subFuncIncRR) {
 SUB_FUNC_IMPL(subFuncDecRR) {
     // TODO: emu 8 bit cpu
     --_getCommonReg16(pInstState->opcode, pReg);
+    pInstState->memMode = MEM_MODE_SLEEP;
+}
+
+SUB_FUNC_IMPL(subFuncAdd_HL_RR) {
+    // TODO: emu by 8 bit adder twice?
+    const int lhs = pReg->getRefHL();
+    const int rhs = _getCommonReg16(pInstState->opcode, pReg);
+    const int  result = lhs + rhs;
+    GB_Flag flag;
+    pReg->getFlag(flag);
+    flag.N = false;
+    flag.C = result > 0xFFFF;
+    flag.H = (lhs&0xFFF) + (rhs&0xFFF) > 0xFFF;
+    pReg->getRefHL() = (uint16_t)(result & 0xFFFF);
+    pReg->setFlag(flag);
     pInstState->memMode = MEM_MODE_SLEEP;
 }
 
