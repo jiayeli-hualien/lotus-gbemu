@@ -15,17 +15,11 @@ http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 #include <unordered_map>
 #include "Iinstruction.hpp"
 #include "instruction.hpp"
+#include "instSubFuncMacro.hpp"
 
 // flows of instruction per memory-cycles
 // TODO: codegen? how to handle function not implemented?
 namespace LOTUSGB {
-
-#define SUB_FUNC_DECLARE(x) \
-struct subFunc##x {\
-SUB_FUNC_OP_RET SUB_FUNC_OP;\
-};
-
-#define SUB_FUNC_IMPL(x) SUB_FUNC_OP_RET subFunc##x::SUB_FUNC_OP
 
 using subFunMapType = std::unordered_map<std::string, Instruction::FUNC_TYPE>;
 subFunMapType getSubFuncMap();

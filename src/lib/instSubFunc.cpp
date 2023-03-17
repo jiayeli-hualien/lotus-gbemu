@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "include/instSubFunc.hpp"
 #include "include/instruction.hpp"
+#include "include/instSubFuncMacro.hpp"
 #include "include/gb_reg.hpp"
 
 namespace LOTUSGB {
@@ -41,8 +42,6 @@ static uint8_t* getRegRHS(const uint8_t &op, Reg *pReg) {
 
 subFunMapType getSubFuncMap() {
     subFunMapType map;
-    // TODO: codegen?
-#define MAP_ENTRY(name) (map[#name]=subFunc##name())
     MAP_ENTRY(NOP);
     MAP_ENTRY(LDRR);
     MAP_ENTRY(LD_R_MEMVAL);
@@ -323,16 +322,6 @@ SUB_FUNC_IMPL(POP_LD_A16_MSB) {
     pInstState->memMode = MEM_MODE_READ_ADDR_MSB;
     pInstState->memAddr = pReg->getRefSP()++;
 }
-
-// int for leverage int promotion
-static constexpr int BYTE_MASK = 0xFF;
-static constexpr int HALF_MASK = 0xF;
-#define GET_LSB(x) ((uint8_t)((x) & BYTE_MASK))
-#define GET_LSB_INT(x) ((x) & BYTE_MASK)
-#define GET_HALF_INT(x) ((x) & HALF_MASK)
-static constexpr int HALF_UPPER_BOUND = 0xF;
-static constexpr int BYTE_UPPER_BOUND = 0xFF;
-#define HALF_OP_HELPER(x, op, y) (GET_HALF_INT((x)) op GET_HALF_INT((y)))
 
 SUB_FUNC_IMPL(AddA_R) {
     uint8_t *rhs = getRegRHS(pInstState->opcode, pReg);
