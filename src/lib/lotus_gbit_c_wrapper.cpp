@@ -5,37 +5,46 @@
 #include "include/GBCPU.hpp"
 #include "include/memory.hpp"
 #include "include/memoryGBIT.hpp"
+#include "include/Iinstruction.hpp"
 #include "include/decoder.hpp"
+#include "include/instSubFunc.hpp"
+#include "include/instSubFuncCB.hpp"
 
 using LOTUSGB::LotusGB;
 using LOTUSGB::GBCPU;
 using LOTUSGB::Memory;
 using LOTUSGB::MemoryGBIT;
 using LOTUSGB::Decoder;
+using LOTUSGB::subFunMapType;
+using LOTUSGB::getSubFuncMap;
+using LOTUSGB::getSubFuncMapCB;
 using std::ifstream;
 
-pILotusGBIT lotusGBIT_Create() {
-    // TODO: factory
-    // TODO: delete objects
-    MemoryGBIT *pMockMMU = new MemoryGBIT();
-
+Decoder* loadDecoder(const std::string &pathDecodeTable, const std::string &pathInstTable, const subFunMapType &subFuncMap) {
     // TODO: filepath from config
     ifstream finDecodeTable, finInstructionTable;
-    std::string pathDecodeTable = "./decode_table.csv";
-    std::string pathInstructionTable = "./instruction_table.csv";
     finDecodeTable.open(pathDecodeTable);
-    finInstructionTable.open(pathInstructionTable);
+    finInstructionTable.open(pathInstTable);
     if (!finDecodeTable) {
         std::cerr << "file\""<< pathDecodeTable <<"\" not found" << std::endl;
         return nullptr;
     }
     if (!finInstructionTable) {
-        std::cerr << "file\""<< pathInstructionTable <<"\" not found" << std::endl;
+        std::cerr << "file\""<< pathInstTable <<"\" not found" << std::endl;
         return nullptr;
     }
-    Decoder *pDecoder = new Decoder(finDecodeTable, finInstructionTable);
+    return new Decoder(finDecodeTable, finInstructionTable, subFuncMap);
+}
 
-    GBCPU *pCPU = new GBCPU(pMockMMU, pDecoder);
+
+pILotusGBIT lotusGBIT_Create() {
+    // TODO: factory
+    // TODO: factory for decoder
+    // TODO: delete objects
+    MemoryGBIT *pMockMMU = new MemoryGBIT();
+    Decoder *pDecoder = loadDecoder("./decode_table.csv", "./instruction_table.csv", getSubFuncMap());
+    Decoder *pDecoderCB = loadDecoder("./cb_decode_table.csv", "./cb_instruction_table.csv", getSubFuncMapCB());
+    GBCPU *pCPU = new GBCPU(pMockMMU, pDecoder, pDecoderCB);
     return new LotusGB(pCPU, pMockMMU);
 }
 

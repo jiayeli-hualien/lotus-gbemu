@@ -11,7 +11,7 @@ namespace LOTUSGB {
 // TODO: refactor the naming: GBCPU->GbCpu, find a tool
 class GBCPU : public ICPU {
 public:
-    GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder);
+    GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder, Decoder *pDecoderCB);
     void reset();
     bool stepOneCycle();
     int stepOneInstruction();
@@ -44,6 +44,7 @@ private:
     IInstruction *pInst;
     int curInst = 0;
     Decoder *pDecoder = nullptr;
+    Decoder *pDecoderCB = nullptr;
 };
 
 }

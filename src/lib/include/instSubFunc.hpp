@@ -12,7 +12,6 @@ http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 #ifndef LOTUSGB_INST_SUB_FUNC_HPP
 #define LOTUSGB_INST_SUB_FUNC_HPP
 #include <string>
-#include <unordered_map>
 #include "Iinstruction.hpp"
 #include "instruction.hpp"
 #include "instSubFuncMacro.hpp"
@@ -21,10 +20,8 @@ http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 // TODO: codegen? how to handle function not implemented?
 namespace LOTUSGB {
 
-using subFunMapType = std::unordered_map<std::string, Instruction::FUNC_TYPE>;
 subFunMapType getSubFuncMap();
 
-SUB_FUNC_DECLARE(NOP);
 SUB_FUNC_DECLARE(LDRR);
 SUB_FUNC_DECLARE(LD_R_MEMVAL);
 // TODO: get the realy GB pipeline, is there a LD_A_MEMVAL?
@@ -36,7 +33,6 @@ SUB_FUNC_DECLARE(LD_SP_HL);
 SUB_FUNC_DECLARE(PUSH_LD_A16_RR);
 SUB_FUNC_DECLARE(POP_LD_R16_MEM16);
 SUB_FUNC_DECLARE(MemReadPC);
-SUB_FUNC_DECLARE(MemReadIndirectHL);
 SUB_FUNC_DECLARE(MemReadIndirectHLDec);
 SUB_FUNC_DECLARE(MemReadIndirectHLInc);
 SUB_FUNC_DECLARE(MemReadIndirectBC_DE);

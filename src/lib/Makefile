@@ -9,6 +9,8 @@ OBJS := $(patsubst %.cpp,$(obj_build_dir)/%.o,$(SRCS))
 
 csv_files_build_path := $(build_dir)/decode_table.csv
 csv_files_build_path += $(build_dir)/instruction_table.csv
+csv_files_build_path += $(build_dir)/cb_decode_table.csv
+csv_files_build_path += $(build_dir)/cb_instruction_table.csv
 include_path = $(CURDIR)/include
 
 all: $(lotus_gb_lib_build_path) $(csv_files_build_path)

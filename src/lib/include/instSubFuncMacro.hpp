@@ -1,5 +1,11 @@
 #ifndef LOTUSGB_INST_SUB_FUNC_MACRO_HPP
 #define LOTUSGB_INST_SUB_FUNC_MACRO_HPP
+#include "Iinstruction.hpp"
+#include "gb_reg.hpp"
+
+#define SUB_FUNC_PARAMS InstState *pInstState, Reg *pReg
+#define SUB_FUNC_ARGS pInstState, pReg
+#define SUB_FUNC_OP operator () (SUB_FUNC_PARAMS)
 
 #define SUB_FUNC_DECLARE(x) \
 struct subFunc##x {\

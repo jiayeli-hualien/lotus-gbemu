@@ -60,9 +60,9 @@ readCsvDecodeTable(std::ifstream &finDecodeTable) {
     return rules;
 }
 
-static bool getSubFuncList(vector<Instruction::FUNC_TYPE> &subFuncList,
+static bool getSubFuncList(vector<IInstruction::FUNC_TYPE> &subFuncList,
                            istringstream &iss, int memCycle,
-                           subFunMapType &subFuncMap) {
+                           const subFunMapType &subFuncMap) {
     string token;
     for (int i=0; i<memCycle; i++) {
         if (!getline(iss, token, ','))
@@ -85,7 +85,7 @@ static bool getSubFuncList(vector<Instruction::FUNC_TYPE> &subFuncList,
 }
 
 static unordered_map<string, int>
-readCsvInstTable(std::vector<Instruction> &instList, std::ifstream &finInstSet, subFunMapType &subFuncMap) {
+readCsvInstTable(std::vector<Instruction> &instList, std::ifstream &finInstSet, const subFunMapType &subFuncMap) {
     unordered_map<string, int> instIdx;
     string line, token;
     istringstream iss;
@@ -109,13 +109,13 @@ readCsvInstTable(std::vector<Instruction> &instList, std::ifstream &finInstSet, 
         token = trim(token);
         // TODO: format check
         int memCycle = std::stoi(token, nullptr, 10);
-        vector<Instruction::FUNC_TYPE> subFuncList;
+        vector<IInstruction::FUNC_TYPE> subFuncList;
         if (!getSubFuncList(subFuncList, iss, memCycle, subFuncMap)) {
             std::cerr << "invalid row:" << line << std::endl;
             continue;
         }
         if ((int)subFuncList.size() != memCycle) {
-            std::cerr << "invalid row:" << line << std::endl;
+            std::cerr << "invalid row:'" << line << "', mem cycle and FUNCTION_KEY_LIST not matched"<< std::endl;
             continue;
         }
         instIdx[instName] = instList.size();
@@ -134,8 +134,7 @@ void Decoder::showLUT() {
     }
 }
 
-Decoder::Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet) {
-    subFunMapType subFuncMap = getSubFuncMap();
+Decoder::Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet, const subFunMapType &subFuncMap) {
     vector<DecodeRule> rules = readCsvDecodeTable(finDecodeTable);
     unordered_map<string, int> instIdx = readCsvInstTable(instList, finInstSet, subFuncMap);
 

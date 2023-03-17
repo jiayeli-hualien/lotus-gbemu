@@ -2,6 +2,10 @@
 #define LOTUSGB_IINSTRUCTION_HPP
 #include <cstdint>
 #include <cstddef>
+#include <string>
+#include <vector>
+#include <functional>
+#include "instSubFuncMacro.hpp"
 #include "gb_reg.hpp"
 
 namespace LOTUSGB {
@@ -52,12 +56,17 @@ InstState* createInitState();
 void destoryInitState(InstState* pInstState);
 void clearInitState(InstState* pInstState);
 
+using SUB_FUNC_OP_RET = void;
 class IInstruction {
 // Stateless interface/object, state from InstructState
 // Child class can hold read-only data/function pointer
 public:
-    virtual bool stepOneMemCycle(InstState *pInstState, Reg *pReg) = 0;
+    using FUNC_TYPE =
+        std::function<SUB_FUNC_OP_RET(SUB_FUNC_PARAMS)>;
+    virtual bool stepOneMemCycle(SUB_FUNC_PARAMS) = 0;
 };
+
+using subFunMapType = std::unordered_map<std::string, IInstruction::FUNC_TYPE>;
 
 }
 

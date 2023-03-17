@@ -10,7 +10,7 @@ class Decoder {
     // Instruct factory, get instruction object from opcode
     // TODO: refactor by abstraction factory pattern
 public:
-    Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet);
+    Decoder(std::ifstream &finDecodeTable, std::ifstream &finInstSet, const subFunMapType &subFuncMap);
     IInstruction* decode(const uint8_t &opcode);
 private:
     void showLUT();

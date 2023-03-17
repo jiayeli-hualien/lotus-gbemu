@@ -6,22 +6,26 @@
 
 namespace LOTUSGB {
 
-GBCPU::GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder):pMmu(pMmu), pDecoder(pDecoder) {
+GBCPU::GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder, Decoder *pDecoderCB)
+:pMmu(pMmu), pDecoder(pDecoder), pDecoderCB(pDecoderCB) {
 }
 
 IInstruction* GBCPU::fetch(uint16_t addr) {
     // TODO: handle deced failed
     const uint8_t OPCODE_CB = 0xCB;
+    instStat.opcode = pMmu->read(addr);
     if (waitDecodeCB) {
         waitDecodeCB = false;
-        return nullptr; // TODO: implemtn CB decoder
+        return pDecoderCB->decode(instStat.opcode);
     }
-    if ((waitDecodeCB = (instStat.opcode = pMmu->read(addr) == OPCODE_CB)))
+    if ((waitDecodeCB = (instStat.opcode == OPCODE_CB)))
         return nullptr;
-    return pDecoder->decode(instStat.opcode = pMmu->read(addr));
+    return pDecoder->decode(instStat.opcode);
 }
 
 void GBCPU::fetchFirstOpcode() {
+    waitDecodeCB = false;
+    instStat = {};
     pInst = fetch(reg.getRefPC()++);
 }
 
@@ -30,6 +34,7 @@ void GBCPU::reset() {
     clockTimeStamp = 0;
     interruptMasterEnable = true;
     isHalt = false;
+    waitDecodeCB = false;
     instStat = {};
     curInst = 0;
     // load first op
@@ -38,7 +43,9 @@ void GBCPU::reset() {
 
 void GBCPU::doFetchNextOp() {
     constexpr int MASK = INST_BUFFER_SIZE-1;
-    curInst = (curInst+1)&MASK;
+    if (!waitDecodeCB) {
+        curInst = (curInst+1)&MASK;
+    }
     instStat = {};
     pInst = fetch(reg.getRefPC()++);
 }
