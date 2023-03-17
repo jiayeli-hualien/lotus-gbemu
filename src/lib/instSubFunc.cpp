@@ -162,7 +162,7 @@ SUB_FUNC_IMPL(subFuncPUSH_LD_A16_RR) {
 }
 
 SUB_FUNC_IMPL(subFuncPOP_LD_R16_MEM16) {
-    pInstState->memMode = MEM_MODE_NONE;
+    pInstState->memMode = MEM_MODE_FETCH;
     _getPushPopReg16(pInstState->opcode, pReg) = pInstState->a16Addr;
     // TODO: refine F's behavior
     // non-flags always zero

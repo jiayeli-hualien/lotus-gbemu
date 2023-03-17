@@ -24,12 +24,13 @@ public:
     bool getHALT();
     void setHALT(bool halt);
 private:
-    void fetch(uint16_t addr);
+    IInstruction* fetch(uint16_t addr);
     void doFetchNextOp();
     void doMemRead(InstState &instStat);
     void doMemReadAddrMSB(InstState &instStat);
     void doMemReadAddrLSB(InstState &instStat);
     void doMemWrite(InstState &instStat);
+    bool stepInstruction();
 
     IMemoryAccess *pMmu;
     Reg reg;
@@ -38,6 +39,7 @@ private:
     bool isHalt = false;
     static constexpr size_t INST_BUFFER_SIZE_POW2 = 1;
     static constexpr size_t INST_BUFFER_SIZE = 1<<INST_BUFFER_SIZE_POW2;
+    bool waitDecodeCB = false;
     InstState instStat;
     IInstruction *pInst;
     int curInst = 0;

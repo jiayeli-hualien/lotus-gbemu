@@ -9,12 +9,20 @@ namespace LOTUSGB {
 GBCPU::GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder):pMmu(pMmu), pDecoder(pDecoder) {
 }
 
-void GBCPU::fetch(uint16_t addr) {
-    pInst = pDecoder->decode(instStat.opcode = pMmu->read(addr));
+IInstruction* GBCPU::fetch(uint16_t addr) {
+    // TODO: handle deced failed
+    const uint8_t OPCODE_CB = 0xCB;
+    if (waitDecodeCB) {
+        waitDecodeCB = false;
+        return nullptr; // TODO: implemtn CB decoder
+    }
+    if ((waitDecodeCB = (instStat.opcode = pMmu->read(addr) == OPCODE_CB)))
+        return nullptr;
+    return pDecoder->decode(instStat.opcode = pMmu->read(addr));
 }
 
 void GBCPU::fetchFirstOpcode() {
-    fetch(reg.getRefPC()++);
+    pInst = fetch(reg.getRefPC()++);
 }
 
 void GBCPU::reset() {
@@ -32,8 +40,7 @@ void GBCPU::doFetchNextOp() {
     constexpr int MASK = INST_BUFFER_SIZE-1;
     curInst = (curInst+1)&MASK;
     instStat = {};
-    pInst = nullptr;
-    fetch(reg.getRefPC()++);
+    pInst = fetch(reg.getRefPC()++);
 }
 
 void GBCPU::doMemRead(InstState &instStat) {
@@ -51,17 +58,28 @@ void GBCPU::doMemWrite(InstState &instStat) {
     pMmu->write(instStat.memAddr,  instStat.memValue);
 }
 
-bool GBCPU::stepOneCycle() {
+bool GBCPU::stepInstruction() {
+    if (waitDecodeCB)
+        return true;
+
     if (!pInst) {
         std::cerr << "last decode failed" << std::endl;
         return false;
     }
-    instStat.memMode = MEM_MODE_NONE;
-    instStat.imeAction = IME_ACTION_NONE;
-    instStat.clockAction = CLOCK_ACTION_NONE;
+
     if (!pInst->stepOneMemCycle(&instStat, &reg)) {
         std::cerr << "instruction failed" << std::endl;
     }
+    return true;
+}
+
+bool GBCPU::stepOneCycle() {
+    instStat.memMode = MEM_MODE_FETCH;
+    instStat.imeAction = IME_ACTION_NONE;
+    instStat.clockAction = CLOCK_ACTION_NONE;
+
+    stepInstruction();
+
     switch (instStat.imeAction) { // TODO: let instruction fully control IME?
         case IME_ACTION_ENABLE:
             setIME(true); break;
@@ -71,10 +89,12 @@ bool GBCPU::stepOneCycle() {
         default:
             break;
     }
+
     if (instStat.clockAction == CLOCK_ACTION_HALT)
         setHALT(true);
+
     switch (instStat.memMode) {
-        case MEM_MODE_NONE: doFetchNextOp(); break;
+        case MEM_MODE_FETCH: doFetchNextOp(); break;
         case MEM_MODE_READ: doMemRead(instStat); break;
         case MEM_MODE_WRITE: doMemWrite(instStat); break;
         case MEM_MODE_READ_ADDR_LSB: doMemReadAddrLSB(instStat); break;
