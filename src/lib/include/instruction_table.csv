@@ -1,81 +1,81 @@
 INSTRUCTION_KEY, MAX_MEM_CYCLE, FUNCTION_KEY_LIST
-NOP, 1, subFuncNOP
-LD_R_R, 1, subFuncLDRR
-LD_R_N, 2, subFuncMemReadPC, subFuncLD_R_MEMVAL
-LD_R_HL, 2, subFuncMemReadIndirectHL, subFuncLD_R_MEMVAL
-LD_HL_R, 2, subFuncMemWriteIndirectHL, subFuncNOP
-LD_HL_N, 3, subFuncMemReadPC, subFuncMemWriteIndirectHL, subFuncNOP
-LD_A_BC_DE, 2, subFuncMemReadIndirectBC_DE, subFuncLD_A_MEMVAL
-LD_BC_DE_A, 2, subFuncMemWriteIndirectBC_DE, subFuncNOP
-LD_A_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemReadIndirectA16, subFuncLD_A_MEMVAL
-LD_NN_A, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemWriteIndirectA16, subFuncNOP
-LDH_A_N, 3, subFuncReadA16LSB, subFuncMemReadIndirectA16, subFuncLD_A_MEMVAL
-LDH_N_A, 3, subFuncReadA16LSB, subFuncMemWriteIndirectA16, subFuncNOP
-LDH_A_C, 2, subFuncReadHighC, subFuncLD_A_MEMVAL
-LDH_C_A, 2, subFuncWriteHighC, subFuncNOP
-LD_A_HL_DEC, 2, subFuncMemReadIndirectHLDec, subFuncLD_A_MEMVAL
-LD_HL_DEC_A, 2, subFuncMemWriteIndirectHLDec, subFuncNOP
-LD_A_HL_INC, 2, subFuncMemReadIndirectHLInc, subFuncLD_A_MEMVAL
-LD_HL_INC_A, 2, subFuncMemWriteIndirectHLInc, subFuncNOP
-LD_RR_NN, 3, subFuncReadA16LSB, subFuncReadA16MSB, subFuncLD_R16_MEM16
-LD_NN_SP, 5, subFuncReadA16LSB, subFuncReadA16MSB, subFuncMemWriteSPA16LSB, subFuncMemWriteSPA16MSB, subFuncNOP
-LD_SP_HL, 2, subFuncLD_SP_HL, subFuncNOP
-LD_HL_SP_R8, 3, subFuncMemReadPC, subFuncBubble, subFuncAdd_HL_SP_R8
-PUSH_RR, 4, subFuncPUSH_LD_A16_RR, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncNOP
-POP_RR, 3, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncPOP_LD_R16_MEM16
-ADD_A_R, 1, subFuncAddA_R
-ADD_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL
-ADD_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL
-ADD_HL_RR, 2, subFuncBubble, subFuncAdd_HL_RR
-ADC_A_R, 1, subFuncAddA_R_Carry
-ADC_A_HL, 2, subFuncMemReadIndirectHL, subFuncAddA_MEMVAL_Carry
-ADC_A_N, 2, subFuncMemReadPC, subFuncAddA_MEMVAL_Carry
-ADD_SP_R8, 4, subFuncMemReadPC, subFuncBubble, subFuncBubble, subFuncAdd_SP_R8
-SUB_A_R, 1, subFuncSubA_R
-SUB_A_HL, 2, subFuncMemReadIndirectHL, subFuncSubA_MEMVAL
-SUB_A_N, 2, subFuncMemReadPC, subFuncSubA_MEMVAL
-SBC_A_R, 1, subFuncSubA_R_Carry
-SBC_A_HL, 2, subFuncMemReadIndirectHL, subFuncSubA_MEMVAL_Carry
-SBC_A_N, 2, subFuncMemReadPC, subFuncSubA_MEMVAL_Carry
-CP_A_R, 1, subFuncCmpA_R
-CP_A_HL, 2, subFuncMemReadIndirectHL, subFuncCmpA_MEMVAL
-CP_A_N, 2, subFuncMemReadPC, subFuncCmpA_MEMVAL
-INC_HL, 3, subFuncMemReadIndirectHL, subFuncMemIncWriteIndirectHL, subFuncNOP
-INC_R, 1, subFuncIncR
-INC_RR, 2, subFuncBubble, subFuncIncRR
-DEC_HL, 3, subFuncMemReadIndirectHL, subFuncMemDecWriteIndirectHL, subFuncNOP
-DEC_R, 1, subFuncDecR
-DEC_RR, 2, subFuncBubble, subFuncDecRR
-AND_A_R, 1, subFuncAndA_R
-AND_A_HL, 2, subFuncMemReadIndirectHL, subFuncAndA_MEMVAL
-AND_A_N, 2, subFuncMemReadPC, subFuncAndA_MEMVAL
-OR_A_R, 1, subFuncOrA_R
-OR_A_HL, 2, subFuncMemReadIndirectHL, subFuncOrA_MEMVAL
-OR_A_N, 2, subFuncMemReadPC, subFuncOrA_MEMVAL
-XOR_A_R, 1, subFuncXorA_R
-XOR_A_HL, 2, subFuncMemReadIndirectHL, subFuncXorA_MEMVAL
-XOR_A_N, 2, subFuncMemReadPC, subFuncXorA_MEMVAL
-CCF, 1, subFuncCCF
-SCF, 1, subFuncSCF
-DAA, 1, subFuncDAA
-CPL, 1, subFuncCPL
-JP_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncLD_PC_MEM16, subFuncNOP
-JP_HL, 1, subFuncLD_PC_HL
-JP_CC_NN, 4, subFuncReadA16LSB, subFuncReadA16MSB, subFuncCondLD_PC_MEM16, subFuncNOP
-JR, 3, subFuncMemReadPC, subFuncJR, subFuncNOP
-JR_CC, 3, subFuncMemReadPC, subFuncCondJR, subFuncNOP
-CALL_NN, 6, subFuncReadA16LSB, subFuncReadA16MSB, subFuncSwapPC_MEM16, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncNOP
-CALL_CC_NN, 6, subFuncReadA16LSB, subFuncReadA16MSB, subFuncCondSwapPC_MEM16, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncNOP
-RET, 4, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncLD_PC_MEM16, subFuncNOP
-RET_CC, 5, subFuncBubble, subFuncCondPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncLD_PC_MEM16, subFuncNOP
-RETI, 4, subFuncPOP_LD_A16_LSB, subFuncPOP_LD_A16_MSB, subFuncLD_PC_MEM16_RETI, subFuncNOP
-RST, 4, subFuncLD_MEM16_PC, subFuncPUSH_A16_MSB, subFuncPUSH_A16_LSB, subFuncRST
-HALT, 1, subFuncHalt
-STOP_Workaround, 1, subFuncStopWorkaround
-STOP, 2, subFuncMemReadPC, subFuncStop
-DI, 1, subFuncDI
-EI, 1, subFuncEI
-RLCA, 1, subFuncRLCA
-RLA, 1, subFuncRLA
-RRCA, 1, subFuncRRCA
-RRA, 1, subFuncRRA
+NOP, 1, NOP
+LD_R_R, 1, LDRR
+LD_R_N, 2, MemReadPC, LD_R_MEMVAL
+LD_R_HL, 2, MemReadIndirectHL, LD_R_MEMVAL
+LD_HL_R, 2, MemWriteIndirectHL, NOP
+LD_HL_N, 3, MemReadPC, MemWriteIndirectHL, NOP
+LD_A_BC_DE, 2, MemReadIndirectBC_DE, LD_A_MEMVAL
+LD_BC_DE_A, 2, MemWriteIndirectBC_DE, NOP
+LD_A_NN, 4, ReadA16LSB, ReadA16MSB, MemReadIndirectA16, LD_A_MEMVAL
+LD_NN_A, 4, ReadA16LSB, ReadA16MSB, MemWriteIndirectA16, NOP
+LDH_A_N, 3, ReadA16LSB, MemReadIndirectA16, LD_A_MEMVAL
+LDH_N_A, 3, ReadA16LSB, MemWriteIndirectA16, NOP
+LDH_A_C, 2, ReadHighC, LD_A_MEMVAL
+LDH_C_A, 2, WriteHighC, NOP
+LD_A_HL_DEC, 2, MemReadIndirectHLDec, LD_A_MEMVAL
+LD_HL_DEC_A, 2, MemWriteIndirectHLDec, NOP
+LD_A_HL_INC, 2, MemReadIndirectHLInc, LD_A_MEMVAL
+LD_HL_INC_A, 2, MemWriteIndirectHLInc, NOP
+LD_RR_NN, 3, ReadA16LSB, ReadA16MSB, LD_R16_MEM16
+LD_NN_SP, 5, ReadA16LSB, ReadA16MSB, MemWriteSPA16LSB, MemWriteSPA16MSB, NOP
+LD_SP_HL, 2, LD_SP_HL, NOP
+LD_HL_SP_R8, 3, MemReadPC, Bubble, Add_HL_SP_R8
+PUSH_RR, 4, PUSH_LD_A16_RR, PUSH_A16_MSB, PUSH_A16_LSB, NOP
+POP_RR, 3, POP_LD_A16_LSB, POP_LD_A16_MSB, POP_LD_R16_MEM16
+ADD_A_R, 1, AddA_R
+ADD_A_HL, 2, MemReadIndirectHL, AddA_MEMVAL
+ADD_A_N, 2, MemReadPC, AddA_MEMVAL
+ADD_HL_RR, 2, Bubble, Add_HL_RR
+ADC_A_R, 1, AddA_R_Carry
+ADC_A_HL, 2, MemReadIndirectHL, AddA_MEMVAL_Carry
+ADC_A_N, 2, MemReadPC, AddA_MEMVAL_Carry
+ADD_SP_R8, 4, MemReadPC, Bubble, Bubble, Add_SP_R8
+SUB_A_R, 1, SubA_R
+SUB_A_HL, 2, MemReadIndirectHL, SubA_MEMVAL
+SUB_A_N, 2, MemReadPC, SubA_MEMVAL
+SBC_A_R, 1, SubA_R_Carry
+SBC_A_HL, 2, MemReadIndirectHL, SubA_MEMVAL_Carry
+SBC_A_N, 2, MemReadPC, SubA_MEMVAL_Carry
+CP_A_R, 1, CmpA_R
+CP_A_HL, 2, MemReadIndirectHL, CmpA_MEMVAL
+CP_A_N, 2, MemReadPC, CmpA_MEMVAL
+INC_HL, 3, MemReadIndirectHL, MemIncWriteIndirectHL, NOP
+INC_R, 1, IncR
+INC_RR, 2, Bubble, IncRR
+DEC_HL, 3, MemReadIndirectHL, MemDecWriteIndirectHL, NOP
+DEC_R, 1, DecR
+DEC_RR, 2, Bubble, DecRR
+AND_A_R, 1, AndA_R
+AND_A_HL, 2, MemReadIndirectHL, AndA_MEMVAL
+AND_A_N, 2, MemReadPC, AndA_MEMVAL
+OR_A_R, 1, OrA_R
+OR_A_HL, 2, MemReadIndirectHL, OrA_MEMVAL
+OR_A_N, 2, MemReadPC, OrA_MEMVAL
+XOR_A_R, 1, XorA_R
+XOR_A_HL, 2, MemReadIndirectHL, XorA_MEMVAL
+XOR_A_N, 2, MemReadPC, XorA_MEMVAL
+CCF, 1, CCF
+SCF, 1, SCF
+DAA, 1, DAA
+CPL, 1, CPL
+JP_NN, 4, ReadA16LSB, ReadA16MSB, LD_PC_MEM16, NOP
+JP_HL, 1, LD_PC_HL
+JP_CC_NN, 4, ReadA16LSB, ReadA16MSB, CondLD_PC_MEM16, NOP
+JR, 3, MemReadPC, JR, NOP
+JR_CC, 3, MemReadPC, CondJR, NOP
+CALL_NN, 6, ReadA16LSB, ReadA16MSB, SwapPC_MEM16, PUSH_A16_MSB, PUSH_A16_LSB, NOP
+CALL_CC_NN, 6, ReadA16LSB, ReadA16MSB, CondSwapPC_MEM16, PUSH_A16_MSB, PUSH_A16_LSB, NOP
+RET, 4, POP_LD_A16_LSB, POP_LD_A16_MSB, LD_PC_MEM16, NOP
+RET_CC, 5, Bubble, CondPOP_LD_A16_LSB, POP_LD_A16_MSB, LD_PC_MEM16, NOP
+RETI, 4, POP_LD_A16_LSB, POP_LD_A16_MSB, LD_PC_MEM16_RETI, NOP
+RST, 4, LD_MEM16_PC, PUSH_A16_MSB, PUSH_A16_LSB, RST
+HALT, 1, Halt
+STOP_Workaround, 1, StopWorkaround
+STOP, 2, MemReadPC, Stop
+DI, 1, DI
+EI, 1, EI
+RLCA, 1, RLCA
+RLA, 1, RLA
+RRCA, 1, RRCA
+RRA, 1, RRA
