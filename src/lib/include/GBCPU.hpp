@@ -4,14 +4,14 @@
 #include "ICPU.hpp"
 #include "IMemoryAccess.hpp"
 #include "gb_reg.hpp"
-#include "decoder.hpp"
+#include "IDecoder.hpp"
 
 namespace LOTUSGB {
 
 // TODO: refactor the naming: GBCPU->GbCpu, find a tool
 class GBCPU : public ICPU {
 public:
-    GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder, Decoder *pDecoderCB);
+    GBCPU(IMemoryAccess *pMmu, IDecoder *pDecoder, IDecoder *pDecoderCB);
     void reset();
     RetStepOneCycle stepOneCycle();
 
@@ -39,8 +39,8 @@ private:
     bool waitDecodeCB = false;
     InstState instStat;
     IInstruction *pInst;
-    Decoder *pDecoder = nullptr;
-    Decoder *pDecoderCB = nullptr;
+    IDecoder *pDecoder = nullptr;
+    IDecoder *pDecoderCB = nullptr;
 };
 
 }

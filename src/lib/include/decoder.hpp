@@ -1,12 +1,14 @@
 #ifndef LOTUSGB_DECODER_HPP
 #define LOTUSGB_DECODER_HPP
 #include <fstream>
+#include "IDecoder.hpp"
 #include "Iinstruction.hpp"
 #include "instruction.hpp"
 
+
 namespace LOTUSGB {
 
-class Decoder {
+class Decoder : public IDecoder {
     // Instruct factory, get instruction object from opcode
     // TODO: refactor by abstraction factory pattern
 public:

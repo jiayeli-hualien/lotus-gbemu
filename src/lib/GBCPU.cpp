@@ -2,11 +2,11 @@
 #include "include/gb_reg.hpp"
 #include "include/Iinstruction.hpp"
 #include "include/instSubFunc.hpp"
-#include "include/decoder.hpp"
+#include "include/IDecoder.hpp"
 
 namespace LOTUSGB {
 
-GBCPU::GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder, Decoder *pDecoderCB)
+GBCPU::GBCPU(IMemoryAccess *pMmu, IDecoder *pDecoder, IDecoder *pDecoderCB)
 :pMmu(pMmu), pDecoder(pDecoder), pDecoderCB(pDecoderCB) {
 }
 
