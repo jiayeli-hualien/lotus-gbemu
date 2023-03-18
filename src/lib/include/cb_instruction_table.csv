@@ -3,3 +3,5 @@ RLC, 1, RLC
 RLC_HL, 3, MemReadIndirectHL, RLC_MEMVAL_MemWriteIndirectHL, NOP
 RRC, 1, RRC
 RRC_HL, 3, MemReadIndirectHL, RRC_MEMVAL_MemWriteIndirectHL, NOP
+RL, 1, RL
+RL_HL, 3, MemReadIndirectHL, RL_MEMVAL_MemWriteIndirectHL, NOP

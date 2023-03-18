@@ -71,6 +71,11 @@ public:
     }
     inline uint16_t& getRefPC() { return pc; };
     inline uint16_t& getRefSP() { return sp; };
+    inline GB_Flag getFlag() {
+        GB_Flag ret;
+        getFlag(ret);
+        return ret;
+    }
     inline void getFlag(GB_Flag &flag) {
         const uint8_t &f = getRefF();
         flag.Z = (REG_GET_BIT_N(f, 7U));
