@@ -1,14 +1,20 @@
 #include <iostream>
 #include <cstring>
-#include "include/lotusGB.hpp"
+#include "include/lotusGBIT.hpp"
+#include "include/GBITCPU.hpp"
 
 namespace LOTUSGB {
 
-LotusGB::LotusGB(ICPU *pCPU, IMemoryGBIT *pMMU)
+LotusGBIT::LotusGBIT(ICPU *pCPU, IMemoryGBIT *pMMU)
 :pCPU(pCPU), pMMU(pMMU) {
+    pGBITCPU = new GBITCPU(pCPU);
 }
 
-void LotusGB::getState(LotusGBState *pState) {
+LotusGBIT::~LotusGBIT() {
+    delete pGBITCPU;
+}
+
+void LotusGBIT::getState(LotusGBState *pState) {
     // TODO: copy all status
     memset(pState, 0, sizeof(LotusGBState));
     Reg reg = pCPU->getReg();
@@ -28,11 +34,11 @@ void LotusGB::getState(LotusGBState *pState) {
     pState->num_accesses = pMMU->getMemoryState(pState->mem_accesses);
 }
 
-void LotusGB::init(size_t instruction_mem_size, uint8_t *instruction_mem) {
+void LotusGBIT::init(size_t instruction_mem_size, uint8_t *instruction_mem) {
     pMMU->setInsturctionMem(instruction_mem_size, instruction_mem);
 }
 
-void LotusGB::setState(LotusGBState *pState) {
+void LotusGBIT::setState(LotusGBState *pState) {
     // TODO: copy all status
     Reg reg;
     pCPU->reset();
@@ -56,8 +62,8 @@ void LotusGB::setState(LotusGBState *pState) {
     pCPU->fetchFirstOpcode();
 }
 
-int LotusGB::step() {
-   return pCPU->stepOneInstruction()*4;
+int LotusGBIT::step() {
+   return pGBITCPU->stepOneInstruction()*4;
 }
 
 }

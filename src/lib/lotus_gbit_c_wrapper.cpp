@@ -1,7 +1,7 @@
 #include <fstream>
 #include "include/lotus_gbit_c_wrapper.h"
 #include "include/ILotusGBIT.hpp"
-#include "include/lotusGB.hpp"
+#include "include/lotusGBIT.hpp"
 #include "include/GBCPU.hpp"
 #include "include/memory.hpp"
 #include "include/memoryGBIT.hpp"
@@ -10,7 +10,7 @@
 #include "include/instSubFunc.hpp"
 #include "include/instSubFuncCB.hpp"
 
-using LOTUSGB::LotusGB;
+using LOTUSGB::LotusGBIT;
 using LOTUSGB::GBCPU;
 using LOTUSGB::Memory;
 using LOTUSGB::MemoryGBIT;
@@ -45,7 +45,7 @@ pILotusGBIT lotusGBIT_Create() {
     Decoder *pDecoder = loadDecoder("./decode_table.csv", "./instruction_table.csv", getSubFuncMap());
     Decoder *pDecoderCB = loadDecoder("./cb_decode_table.csv", "./cb_instruction_table.csv", getSubFuncMapCB());
     GBCPU *pCPU = new GBCPU(pMockMMU, pDecoder, pDecoderCB);
-    return new LotusGB(pCPU, pMockMMU);
+    return new LotusGBIT(pCPU, pMockMMU);
 }
 
 void lotusGBIT_Init(pILotusGBIT self, size_t instruction_mem_size, uint8_t *instruction_mem) {

@@ -35,16 +35,11 @@ void GBCPU::reset() {
     isHalt = false;
     waitDecodeCB = false;
     instStat = {};
-    curInst = 0;
     // load first op
     fetchFirstOpcode();
 }
 
 void GBCPU::doFetchNextOp() {
-    constexpr int MASK = INST_BUFFER_SIZE-1;
-    if (!waitDecodeCB) {
-        curInst = (curInst+1)&MASK;
-    }
     instStat = {};
     pInst = fetch(reg.getRefPC()++);
 }
@@ -72,16 +67,19 @@ bool GBCPU::stepInstruction() {
 
     if (!pInst->stepOneMemCycle(&instStat, &reg)) {
         std::cerr << "instruction failed" << std::endl;
+        return false;
     }
     return true;
 }
 
-bool GBCPU::stepOneCycle() {
+RetStepOneCycle GBCPU::stepOneCycle() {
+    RetStepOneCycle ret;
     instStat.memMode = MEM_MODE_FETCH;
     instStat.imeAction = IME_ACTION_NONE;
     instStat.clockAction = CLOCK_ACTION_NONE;
 
-    stepInstruction();
+    if (!stepInstruction())
+        return ret;
 
     switch (instStat.imeAction) { // TODO: let instruction fully control IME?
         case IME_ACTION_ENABLE:
@@ -96,6 +94,9 @@ bool GBCPU::stepOneCycle() {
     if (instStat.clockAction == CLOCK_ACTION_HALT)
         setHALT(true);
 
+    ret.fetchedNewInst = (!waitDecodeCB)
+                         && (instStat.memMode == MEM_MODE_FETCH);
+
     switch (instStat.memMode) {
         case MEM_MODE_FETCH: doFetchNextOp(); break;
         case MEM_MODE_READ: doMemRead(instStat); break;
@@ -107,16 +108,8 @@ bool GBCPU::stepOneCycle() {
             break;
     }
     clockTimeStamp+=4;
-    return true;
-}
-
-int GBCPU::stepOneInstruction() {
-    int lastInst = curInst;
-    int cntMemCycle = 0;
-    while (lastInst == curInst && stepOneCycle()) {
-        cntMemCycle++;
-    }
-    return cntMemCycle;
+    ret.success = true;
+    return ret;
 }
 
 Reg GBCPU::getReg() {

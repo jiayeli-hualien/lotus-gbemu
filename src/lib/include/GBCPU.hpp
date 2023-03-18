@@ -13,8 +13,7 @@ class GBCPU : public ICPU {
 public:
     GBCPU(IMemoryAccess *pMmu, Decoder *pDecoder, Decoder *pDecoderCB);
     void reset();
-    bool stepOneCycle();
-    int stepOneInstruction();
+    RetStepOneCycle stepOneCycle();
 
     void fetchFirstOpcode();
     Reg getReg();
@@ -37,12 +36,9 @@ private:
     u_int64_t clockTimeStamp;
     bool interruptMasterEnable = true;
     bool isHalt = false;
-    static constexpr size_t INST_BUFFER_SIZE_POW2 = 1;
-    static constexpr size_t INST_BUFFER_SIZE = 1<<INST_BUFFER_SIZE_POW2;
     bool waitDecodeCB = false;
     InstState instStat;
     IInstruction *pInst;
-    int curInst = 0;
     Decoder *pDecoder = nullptr;
     Decoder *pDecoderCB = nullptr;
 };

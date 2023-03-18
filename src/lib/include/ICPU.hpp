@@ -7,17 +7,21 @@
 
 namespace LOTUSGB {
 
+struct RetStepOneCycle {
+    bool success = false;
+    bool fetchedNewInst = false;
+};
+
 class ICPU {
 public:
     virtual void reset() = 0;
+    virtual void fetchFirstOpcode() = 0;
 
-    // step one memory cycle until got cpu pipeline documents
+    // step one memory cycle
+    virtual RetStepOneCycle stepOneCycle() = 0; // 1Hz mem cycle
     // TODO: func stepOneCPUClock
-    virtual bool stepOneCycle() = 0; // 1Hz mem cycle
 
     // tool functions for GBIT
-    virtual int stepOneInstruction() = 0; // return mem cycle cnt of a INST
-    virtual void fetchFirstOpcode() = 0;
     // TODO: remove them from API, or provide Memento Pattern
     virtual Reg getReg() = 0;
     virtual void setReg(const Reg &reg) = 0;
