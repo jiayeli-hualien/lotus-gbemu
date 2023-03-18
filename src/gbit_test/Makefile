@@ -1,6 +1,6 @@
 # This is a C project
 CC := gcc
-CPPFLAGS := -Wall -g
+CPPFLAGS := -Wall -O2
 # Assume gbit(https://github.com/koenk/gbit) repo is in the same dir
 repo_parent_folder = $(realpath $(build_dir)/../../)
 gbit_path = $(repo_parent_folder)/gbit

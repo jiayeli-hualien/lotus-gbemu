@@ -19,3 +19,5 @@ BIT, 1, BIT
 BIT_HL, 3,  MemReadIndirectHL, BIT_MEMVAL, NOP
 RES, 1, RES
 RES_HL, 3,  MemReadIndirectHL, RES_MEMVAL_MemWriteIndirectHL, NOP
+SET, 1, SET
+SET_HL, 3,  MemReadIndirectHL, SET_MEMVAL_MemWriteIndirectHL, NOP

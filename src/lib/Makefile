@@ -1,5 +1,5 @@
 CC := g++
-CPPFLAGS := -Wall -g -fPIC --std=c++17
+CPPFLAGS := -Wall -fPIC --std=c++17 -O2
 LDFLAGS := -shared
 lotus_gb_lib_build_path := $(build_dir)/liblotusgb.so
 obj_build_dir := $(build_dir)/obj
