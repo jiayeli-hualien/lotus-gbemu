@@ -57,12 +57,19 @@ void destoryInitState(InstState* pInstState);
 void clearInitState(InstState* pInstState);
 
 using SUB_FUNC_OP_RET = void;
+
+#define INST_USE_FUNC_OBJ 1 // Use func obj or func ptr for FUNC_TYPE
+
 class IInstruction {
 // Stateless interface/object, state from InstructState
 // Child class can hold read-only data/function pointer
 public:
+#if INST_USE_FUNC_OBJ
     using FUNC_TYPE =
         std::function<SUB_FUNC_OP_RET(SUB_FUNC_PARAMS)>;
+#else // INST_USE_FUNC_OBJ
+    using FUNC_TYPE = SUB_FUNC_OP_RET(*)(SUB_FUNC_PARAMS);
+#endif // INST_USE_FUNC_OBJ
     virtual bool stepOneMemCycle(SUB_FUNC_PARAMS) = 0;
 };
 
