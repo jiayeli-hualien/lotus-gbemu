@@ -22,6 +22,7 @@ namespace LOTUSGB {
 
 subFunMapType getSubFuncMap();
 
+SUB_FUNC_DECLARE(NOT_SUPPORT);
 SUB_FUNC_DECLARE(LDRR);
 SUB_FUNC_DECLARE(LD_R_MEMVAL);
 // TODO: get the realy GB pipeline, is there a LD_A_MEMVAL?

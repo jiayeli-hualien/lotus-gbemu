@@ -12,6 +12,7 @@ namespace LOTUSGB {
 
 subFunMapType getSubFuncMap() {
     subFunMapType map;
+    MAP_ENTRY(NOT_SUPPORT);
     MAP_ENTRY(NOP);
     MAP_ENTRY(LDRR);
     MAP_ENTRY(LD_R_MEMVAL);
@@ -102,6 +103,12 @@ static uint8_t* getRegLHS(const uint8_t &op, Reg *pReg) {
     if (!ret)
         std::cerr << "invalid OP code, reg not support" << (int)op << std::endl;
     return ret;
+}
+
+SUB_FUNC_IMPL(NOT_SUPPORT) {
+    // TDOO: throw exception
+    std::cerr << "Op code " << std::hex << pInstState->opcode
+              << "is not supported" << std::endl;
 }
 
 SUB_FUNC_IMPL(LDRR) {
