@@ -24,7 +24,8 @@ SUB_FUNC_DECLARE(RLC);
 // TODO: read official doc of the CPU
 // TODO: split one mem cycle to reg/mem
 SUB_FUNC_DECLARE(RLC_MEMVAL_MemWriteIndirectHL);
-
+SUB_FUNC_DECLARE(RRC);
+SUB_FUNC_DECLARE(RRC_MEMVAL_MemWriteIndirectHL);
 }
 
 #endif // LOTUSGB_INST_SUB_FUNC_CB_HPP
