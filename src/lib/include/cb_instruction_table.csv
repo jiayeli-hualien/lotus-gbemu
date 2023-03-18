@@ -13,3 +13,5 @@ SRA, 1, SRA
 SRA_HL, 3, MemReadIndirectHL, SRA_MEMVAL_MemWriteIndirectHL, NOP
 SWAP, 1, SWAP
 SWAP_HL, 3, MemReadIndirectHL, SWAP_MEMVAL_MemWriteIndirectHL, NOP
+SRL, 1, SRL
+SRL_HL, 3, MemReadIndirectHL, SRL_MEMVAL_MemWriteIndirectHL, NOP
