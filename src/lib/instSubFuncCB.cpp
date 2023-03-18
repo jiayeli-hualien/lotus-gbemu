@@ -20,10 +20,12 @@ subFunMapType getSubFuncMapCB() {
     MAP_ENTRY(RRC_MEMVAL_MemWriteIndirectHL);
     MAP_ENTRY(RL);
     MAP_ENTRY(RL_MEMVAL_MemWriteIndirectHL);
+    MAP_ENTRY(RR);
+    MAP_ENTRY(RR_MEMVAL_MemWriteIndirectHL);
     return map;
 }
 
-static void _RLC(uint8_t *value, GB_Flag &flag) {
+static inline void _RLC(uint8_t *value, GB_Flag &flag) {
     int result = *value;
     flag.N = false;
     flag.H = false;
@@ -54,7 +56,7 @@ SUB_FUNC_IMPL(RLC_MEMVAL_MemWriteIndirectHL) {
     _CB_MemWriteIndirectHL(SUB_FUNC_ARGS);
 }
 
-static void _RRC(uint8_t *value, GB_Flag &flag) {
+static inline void _RRC(uint8_t *value, GB_Flag &flag) {
     int result = *value;
     flag.N = false;
     flag.H = false;
@@ -81,7 +83,7 @@ SUB_FUNC_IMPL(RRC_MEMVAL_MemWriteIndirectHL) {
     _CB_MemWriteIndirectHL(SUB_FUNC_ARGS);
 }
 
-static void _RL(uint8_t *value, GB_Flag &flag) {
+static inline void _RL(uint8_t *value, GB_Flag &flag) {
     int result = *value;
     flag.N = false;
     flag.H = false;
@@ -102,6 +104,33 @@ SUB_FUNC_IMPL(RL) {
 SUB_FUNC_IMPL(RL_MEMVAL_MemWriteIndirectHL) {
     GB_Flag flag = pReg->getFlag();
     _RL(&pInstState->memValue, flag);
+    pReg->setFlag(flag);
+
+    _CB_MemWriteIndirectHL(SUB_FUNC_ARGS);
+}
+
+static inline void _RR(uint8_t *value, GB_Flag &flag) {
+    int result = *value;
+    flag.N = false;
+    flag.H = false;
+    result = (result) | (flag.C ? 1<<8 : 0);
+    flag.C = (1)&result;
+    result >>= 1;
+    flag.Z = !result;
+    *value = GET_LSB(result);
+}
+
+SUB_FUNC_IMPL(RR) {
+    if (auto reg = getRegRHS(pInstState->opcode, pReg)) {
+        GB_Flag flag = pReg->getFlag();
+        _RR(reg, flag);
+        pReg->setFlag(flag);
+    }
+}
+
+SUB_FUNC_IMPL(RR_MEMVAL_MemWriteIndirectHL) {
+    GB_Flag flag = pReg->getFlag();
+    _RR(&pInstState->memValue, flag);
     pReg->setFlag(flag);
 
     _CB_MemWriteIndirectHL(SUB_FUNC_ARGS);
