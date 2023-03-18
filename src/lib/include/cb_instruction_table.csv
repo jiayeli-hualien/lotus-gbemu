@@ -9,3 +9,5 @@ RR, 1, RR
 RR_HL, 3, MemReadIndirectHL, RR_MEMVAL_MemWriteIndirectHL, NOP
 SLA, 1, SLA
 SLA_HL, 3, MemReadIndirectHL, SLA_MEMVAL_MemWriteIndirectHL, NOP
+SRA, 1, SRA
+SRA_HL, 3, MemReadIndirectHL, SRA_MEMVAL_MemWriteIndirectHL, NOP
