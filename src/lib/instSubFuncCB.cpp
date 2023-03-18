@@ -26,6 +26,8 @@ subFunMapType getSubFuncMapCB() {
     MAP_ENTRY(SLA_MEMVAL_MemWriteIndirectHL);
     MAP_ENTRY(SRA);
     MAP_ENTRY(SRA_MEMVAL_MemWriteIndirectHL);
+    MAP_ENTRY(SWAP);
+    MAP_ENTRY(SWAP_MEMVAL_MemWriteIndirectHL);
     return map;
 }
 
@@ -188,6 +190,32 @@ SUB_FUNC_IMPL(SRA) {
 SUB_FUNC_IMPL(SRA_MEMVAL_MemWriteIndirectHL) {
     GB_Flag flag = pReg->getFlag();
     _SRA(&pInstState->memValue, flag);
+    pReg->setFlag(flag);
+
+    _CB_MemWriteIndirectHL(SUB_FUNC_ARGS);
+}
+
+static inline void _SWAP(uint8_t *value, GB_Flag &flag) {
+    int result = *value;
+    flag.N = false;
+    flag.H = false;
+    flag.C = false;
+    result = (result >> 4) | (result << 4);
+    flag.Z = !(result);
+    *value = GET_LSB(result);
+}
+
+SUB_FUNC_IMPL(SWAP) {
+    if (auto reg = getRegRHS(pInstState->opcode, pReg)) {
+        GB_Flag flag = {};
+        _SWAP(reg, flag);
+        pReg->setFlag(flag);
+    }
+}
+
+SUB_FUNC_IMPL(SWAP_MEMVAL_MemWriteIndirectHL) {
+    GB_Flag flag = {};
+    _SWAP(&pInstState->memValue, flag);
     pReg->setFlag(flag);
 
     _CB_MemWriteIndirectHL(SUB_FUNC_ARGS);
