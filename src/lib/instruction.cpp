@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <stdexcept>
 #include "include/instruction.hpp"
 
 namespace LOTUSGB {
@@ -29,8 +30,7 @@ std::string Instruction::getName() {
 };
 
 bool Instruction::stepOneMemCycle(SUB_FUNC_PARAMS) {
-    if (pInstState->memCycleCnt>=memCycles) {
-
+    if (pInstState->memCycleCnt >= memCycles) {
         std::cerr << "inst name " << this->name << ":"
                   << "invalid cnt" << pInstState->memCycleCnt
                   << " more then sub function number "
@@ -38,6 +38,9 @@ bool Instruction::stepOneMemCycle(SUB_FUNC_PARAMS) {
         return false;
     }
     funcPerMemCycle[pInstState->memCycleCnt++](SUB_FUNC_ARGS);
+    if (pInstState->memCycleCnt >= memCycles && pInstState->memMode != MEM_MODE_FETCH) {
+        throw std::invalid_argument("last sub function should set memMode as MEM_MODE_FETCH");
+    }
     return true;
 }
 

@@ -18,8 +18,7 @@ IInstruction* GBCPU::fetch(uint16_t addr) {
         waitDecodeCB = false;
         return pDecoderCB->decode(instStat.opcode);
     }
-    if ((waitDecodeCB = (instStat.opcode == OPCODE_CB)))
-        return nullptr;
+    waitDecodeCB = (instStat.opcode == OPCODE_CB);
     return pDecoder->decode(instStat.opcode);
 }
 
@@ -66,9 +65,6 @@ void GBCPU::doMemWrite(InstState &instStat) {
 }
 
 bool GBCPU::stepInstruction() {
-    if (waitDecodeCB)
-        return true;
-
     if (!pInst) {
         std::cerr << "last decode failed" << std::endl;
         return false;
