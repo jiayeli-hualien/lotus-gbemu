@@ -31,7 +31,9 @@ int main(int argc, char *argv[]) {
         fprintf(stderr, "failed to create test object\n");
         return -1;
     }
-    return tester_run(&flags, &gbLotusOps);
+    bool ret = tester_run(&flags, &gbLotusOps);
+    lotusGBIT_Destroy(gpLotusGB);
+    return ret;
 }
 
 // TODO: implement functions

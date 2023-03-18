@@ -1,4 +1,5 @@
 #include <fstream>
+#include <memory>
 #include "include/lotus_gbit_c_wrapper.h"
 #include "include/ILotusGBIT.hpp"
 #include "include/lotusGBIT.hpp"
@@ -36,16 +37,31 @@ Decoder* loadDecoder(const std::string &pathDecodeTable, const std::string &path
     return new Decoder(finDecodeTable, finInstructionTable, subFuncMap);
 }
 
+using std::make_shared;
+using std::make_unique;
 
+// TODO: IDecoder & pass shared_ptr into LotusGBIT
+static Decoder *pDecoder = nullptr;
+static Decoder *pDecoderCB = nullptr;
 pILotusGBIT lotusGBIT_Create() {
     // TODO: factory
     // TODO: factory for decoder
     // TODO: delete objects
-    MemoryGBIT *pMockMMU = new MemoryGBIT();
-    Decoder *pDecoder = loadDecoder("./decode_table.csv", "./instruction_table.csv", getSubFuncMap());
-    Decoder *pDecoderCB = loadDecoder("./cb_decode_table.csv", "./cb_instruction_table.csv", getSubFuncMapCB());
-    GBCPU *pCPU = new GBCPU(pMockMMU, pDecoder, pDecoderCB);
-    return new LotusGBIT(pCPU, pMockMMU);
+    if (!pDecoder)
+        pDecoder = loadDecoder("./decode_table.csv", "./instruction_table.csv", getSubFuncMap());
+    if (!pDecoderCB)
+        pDecoderCB = loadDecoder("./cb_decode_table.csv", "./cb_instruction_table.csv", getSubFuncMapCB());
+    auto spMockMMU = make_shared<MemoryGBIT>();
+    auto upCPU = make_unique<GBCPU>(spMockMMU.get(), pDecoder, pDecoderCB);
+    return new LotusGBIT(std::move(upCPU), spMockMMU);
+}
+
+void lotusGBIT_Destroy(pILotusGBIT pTestObj) {
+    delete pDecoder;
+    pDecoder = nullptr;
+    delete pDecoderCB;
+    pDecoder = nullptr;
+    delete pTestObj;
 }
 
 void lotusGBIT_Init(pILotusGBIT self, size_t instruction_mem_size, uint8_t *instruction_mem) {

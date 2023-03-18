@@ -5,9 +5,10 @@
 
 namespace LOTUSGB {
 
-LotusGBIT::LotusGBIT(ICPU *pCPU, IMemoryGBIT *pMMU)
-:pCPU(pCPU), pMMU(pMMU) {
-    pGBITCPU = new GBITCPU(pCPU);
+LotusGBIT::LotusGBIT(unique_ptr<ICPU> &&upCPU, shared_ptr<IMemoryGBIT> spMMU)
+:upCPU(std::move(upCPU)), spMMU(spMMU) {
+    // TODO: only access via interfaces
+    pGBITCPU = new GBITCPU(this->upCPU.get());
 }
 
 LotusGBIT::~LotusGBIT() {
@@ -17,7 +18,7 @@ LotusGBIT::~LotusGBIT() {
 void LotusGBIT::getState(LotusGBState *pState) {
     // TODO: copy all status
     memset(pState, 0, sizeof(LotusGBState));
-    Reg reg = pCPU->getReg();
+    Reg reg = upCPU->getReg();
     // gbit reference CPU don't have parallel fetch/excute overlap
     pState->pc = reg.getRefPC() - 1;
     pState->sp = reg.getRefSP();
@@ -29,19 +30,19 @@ void LotusGBIT::getState(LotusGBState *pState) {
     pState->e = reg.getRefE();
     pState->h = reg.getRefH();
     pState->l = reg.getRefL();
-    pState->is_halt = pCPU->getHALT();
-    pState->interrupts_master_enable = pCPU->getIME();
-    pState->num_accesses = pMMU->getMemoryState(pState->mem_accesses);
+    pState->is_halt = upCPU->getHALT();
+    pState->interrupts_master_enable = upCPU->getIME();
+    pState->num_accesses = spMMU->getMemoryState(pState->mem_accesses);
 }
 
 void LotusGBIT::init(size_t instruction_mem_size, uint8_t *instruction_mem) {
-    pMMU->setInsturctionMem(instruction_mem_size, instruction_mem);
+    spMMU->setInsturctionMem(instruction_mem_size, instruction_mem);
 }
 
 void LotusGBIT::setState(LotusGBState *pState) {
     // TODO: copy all status
     Reg reg;
-    pCPU->reset();
+    upCPU->reset();
     reg.getRefPC() = pState->pc;
     reg.getRefSP() = pState->sp;
     reg.getRefA() = pState->a;
@@ -52,14 +53,14 @@ void LotusGBIT::setState(LotusGBState *pState) {
     reg.getRefE() = pState->e;
     reg.getRefH() = pState->h;
     reg.getRefL() = pState->l;
-    pCPU->setReg(reg);
-    pCPU->setHALT(pState->is_halt);
-    pCPU->setIME(pState->interrupts_master_enable);
+    upCPU->setReg(reg);
+    upCPU->setHALT(pState->is_halt);
+    upCPU->setIME(pState->interrupts_master_enable);
 
-    pMMU->setMemoryState(pState->num_accesses, pState->mem_accesses);
+    spMMU->setMemoryState(pState->num_accesses, pState->mem_accesses);
 
     // workaround for pCPU->reset / setReg order
-    pCPU->fetchFirstOpcode();
+    upCPU->fetchFirstOpcode();
 }
 
 int LotusGBIT::step() {
