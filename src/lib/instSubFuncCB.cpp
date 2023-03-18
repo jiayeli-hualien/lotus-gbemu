@@ -30,6 +30,8 @@ subFunMapType getSubFuncMapCB() {
     MAP_ENTRY(SWAP_MEMVAL_MemWriteIndirectHL);
     MAP_ENTRY(SRL);
     MAP_ENTRY(SRL_MEMVAL_MemWriteIndirectHL);
+    MAP_ENTRY(BIT);
+    MAP_ENTRY(BIT_MEMVAL);
     return map;
 }
 
@@ -247,6 +249,34 @@ SUB_FUNC_IMPL(SRL_MEMVAL_MemWriteIndirectHL) {
     pReg->setFlag(flag);
 
     _CB_MemWriteIndirectHL(SUB_FUNC_ARGS);
+}
+
+static inline int getLHS_Idx(const uint8_t &opcode) {
+    return ((opcode >> 3) & 0x7);
+}
+
+static inline void _BIT(uint8_t *value, GB_Flag &flag, const uint8_t &opcode) {
+    const int pos = getLHS_Idx(opcode);
+    flag.N = false;
+    flag.H = true;
+    flag.Z = !((1<<pos) & (*value));
+}
+
+SUB_FUNC_IMPL(BIT) {
+    if (auto reg = getRegRHS(pInstState->opcode, pReg)) {
+        GB_Flag flag = pReg->getFlag();
+        _BIT(reg, flag, pInstState->opcode);
+        pReg->setFlag(flag);
+    }
+}
+
+SUB_FUNC_IMPL(BIT_MEMVAL) {
+    GB_Flag flag = pReg->getFlag();
+    _BIT(&pInstState->memValue, flag, pInstState->opcode);
+    pReg->setFlag(flag);
+
+    // TODO: check spec & memcycle, why does BIT (HL) need 16 cycles?
+    pInstState->memMode = MEM_MODE_SLEEP;
 }
 
 }
