@@ -1,0 +1,11 @@
+#ifndef LOTUS_GB_GBFACTORY_HPP
+#define LOTUS_GB_GBFACTORY_HPP
+
+namespace LOTUSGB {
+
+
+
+
+}
+
+#endif // LOTUS_GB_GBFACTORY_HPP
