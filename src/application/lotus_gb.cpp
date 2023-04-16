@@ -4,6 +4,8 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    LOTUSGB::IGB *gb = nullptr;
+    LOTUSGB::IGB *pGB = getGB_Obj();
+
+    delete pGB;
     return 0;
 }
